@@ -10,8 +10,6 @@
 <meta name="theme-color" content="#FAF8F5">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23FAF8F5' width='100' height='100' rx='20'/><text x='50' y='62' text-anchor='middle' font-size='50'>🌿</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://apis.google.com/js/api.js" async defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
 
@@ -497,9 +495,9 @@ body {
   </aside>
 
   <div class="main-area">
-    <div class="sync-bar" id="sync-bar" onclick="handleSyncClick()">
+    <div class="sync-bar synced" id="sync-bar" onclick="manualSync()">
       <span class="sync-dot"></span>
-      <span id="sync-text">☁ Connecter Google Drive</span>
+      <span id="sync-text">☁ Synchronisé sur tous tes appareils</span>
     </div>
     <div class="topbar">
       <div class="topbar-left">
@@ -610,9 +608,8 @@ body {
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
       <div class="sidebar-section-title" style="padding:8px 0 4px;">Thème</div>
       <div class="themes-grid" id="themes-grid"></div>
-      <div class="sidebar-section-title" style="padding:12px 0 4px;">Google Drive</div>
-      <button class="btn" id="gdrive-settings-btn" onclick="handleSyncClick()" style="width:100%;justify-content:center;">☁️ Connecter Google Drive</button>
-      <p style="font-size:11px;color:var(--text3);text-align:center;line-height:1.5;margin-top:4px;">Synchronise automatiquement tes données sur Google Drive pour y accéder depuis tous tes appareils.</p>
+      <div class="sidebar-section-title" style="padding:12px 0 4px;">Synchronisation</div>
+      <div id="sync-status-settings" style="text-align:center;padding:8px;font-size:13px;color:var(--text2);background:var(--bg);border-radius:10px;"></div>
       <div class="sidebar-section-title" style="padding:12px 0 4px;">Données</div>
       <button class="btn" onclick="changePin()" style="width:100%;justify-content:center;">🔑 Changer le code PIN</button>
       <button class="btn" onclick="changeName()" style="width:100%;justify-content:center;">✏️ Changer le prénom</button>
@@ -1780,234 +1777,155 @@ unlock=function(){
 };
 
 // ═══════════════════════════════════════
-// GOOGLE DRIVE SYNC
+// SUPABASE SYNC
 // ═══════════════════════════════════════
-const GDRIVE_FILE_NAME='inspiree_sync.json';
-const GDRIVE_SCOPES='https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
-let gdriveReady=false;
-let gdriveToken=null;
-let gdriveSyncInterval=null;
-let gdriveFileId=null;
+const SUPA_URL='https://anfaptqvbbqgdnhyhsit.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuZmFwdHF2YmJxZ2RuaHloc2l0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDI3NTksImV4cCI6MjA5NzUxODc1OX0.mk_LQKebOMwNdOZA8WYXhLN_HQURphxw7YBWRRMYSO0';
+let supaRowId=null;
+let syncInProgress=false;
+let syncTimer=null;
 
-// ── Google API init ──
-function initGoogleDrive(){
-  // Check if we have a stored token
-  const stored=localStorage.getItem('inspiree_gdrive_token');
-  const expiry=localStorage.getItem('inspiree_gdrive_expiry');
-  if(stored && expiry && Date.now()<parseInt(expiry)){
-    gdriveToken=stored;
-    gdriveReady=true;
-    updateSyncBar('connected');
-    startAutoSync();
-  }
-}
-
-function handleSyncClick(){
-  if(gdriveReady){
-    // Already connected — manual sync
-    syncToGDrive();
-  } else {
-    // Start OAuth
-    connectGoogleDrive();
-  }
-}
-
-function connectGoogleDrive(){
-  // Check if GIS is loaded
-  if(typeof google==='undefined'||!google.accounts){
-    // GIS not loaded — show setup instructions
-    showDriveSetupGuide();
-    return;
-  }
-
-  const client=google.accounts.oauth2.initTokenClient({
-    client_id:D.gdriveClientId||'',
-    scope:GDRIVE_SCOPES,
-    callback:(response)=>{
-      if(response.error){
-        console.error('OAuth error:',response);
-        updateSyncBar('error');
-        return;
-      }
-      gdriveToken=response.access_token;
-      gdriveReady=true;
-      // Store token with expiry
-      localStorage.setItem('inspiree_gdrive_token',gdriveToken);
-      localStorage.setItem('inspiree_gdrive_expiry',Date.now()+(response.expires_in*1000));
-      updateSyncBar('connected');
-      syncToGDrive();
-      startAutoSync();
+// ── Supabase REST helpers ──
+async function supaFetch(path,opts={}){
+  const res=await fetch(SUPA_URL+'/rest/v1/'+path,{
+    ...opts,
+    headers:{
+      'apikey':SUPA_KEY,
+      'Authorization':'Bearer '+SUPA_KEY,
+      'Content-Type':'application/json',
+      'Prefer':opts.prefer||'return=representation',
+      ...(opts.headers||{})
     }
   });
-
-  if(!D.gdriveClientId){
-    showDriveSetupGuide();
-    return;
-  }
-  client.requestAccessToken();
+  if(!res.ok){const t=await res.text();throw new Error(t);}
+  const text=await res.text();
+  return text?JSON.parse(text):null;
 }
 
-function showDriveSetupGuide(){
-  document.getElementById('modal-title').textContent='☁️ Configurer Google Drive';
-  document.getElementById('modal-input').value=D.gdriveClientId||'';
-  document.getElementById('modal-input').placeholder='Client ID Google…';
-  document.getElementById('modal-extra').innerHTML=`
-    <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px;padding:12px;background:var(--bg);border-radius:10px;">
-      <b>Comment obtenir votre Client ID :</b><br>
-      1. Allez sur <a href="https://console.cloud.google.com" target="_blank" style="color:var(--terra)">console.cloud.google.com</a><br>
-      2. Créez un projet (ex: "Inspirée")<br>
-      3. Activez l'API Google Drive<br>
-      4. Allez dans Identifiants → Créer → ID client OAuth 2.0<br>
-      5. Type : Application Web<br>
-      6. Origines JS autorisées : ajoutez l'URL où vous hébergez ce fichier<br>
-      7. Copiez le Client ID ici<br><br>
-      <b>Alternative sans API :</b> Utilisez le bouton Exporter (JSON) dans les réglages et sauvegardez le fichier manuellement sur Google Drive.
-    </div>`;
-  document.getElementById('modal-confirm').onclick=()=>{
-    const id=document.getElementById('modal-input').value.trim();
-    if(id){
-      D.gdriveClientId=id;
-      save();
-      closeModal();
-      connectGoogleDrive();
-    } else {
-      closeModal();
-    }
-  };
-  openModal();
-}
-
-async function syncToGDrive(){
-  if(!gdriveReady||!gdriveToken)return;
-  updateSyncBar('syncing');
+// ── Upload to Supabase ──
+async function syncUp(){
+  if(syncInProgress||!D.pin)return;
+  syncInProgress=true;
+  updateSyncUI('syncing');
 
   try{
-    // 1. Find existing file
-    if(!gdriveFileId){
-      const searchRes=await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${GDRIVE_FILE_NAME}' and trashed=false&spaces=drive&fields=files(id,modifiedTime)`,{
-        headers:{'Authorization':'Bearer '+gdriveToken}
-      });
-      if(!searchRes.ok) throw new Error('Search failed');
-      const searchData=await searchRes.json();
-      if(searchData.files&&searchData.files.length>0){
-        gdriveFileId=searchData.files[0].id;
+    const pinHash=await hashPin(D.pin);
+    const payload={user_pin:pinHash,data:D};
+
+    if(supaRowId){
+      // Update existing row
+      await supaFetch(`inspiree_data?id=eq.${supaRowId}`,{method:'PATCH',body:JSON.stringify(payload)});
+    } else {
+      // Check if row exists for this PIN
+      const existing=await supaFetch(`inspiree_data?user_pin=eq.${pinHash}&select=id`);
+      if(existing&&existing.length>0){
+        supaRowId=existing[0].id;
+        await supaFetch(`inspiree_data?id=eq.${supaRowId}`,{method:'PATCH',body:JSON.stringify(payload)});
+      } else {
+        // Create new
+        const created=await supaFetch('inspiree_data',{method:'POST',body:JSON.stringify(payload)});
+        if(created&&created.length>0)supaRowId=created[0].id;
       }
     }
-
-    const content=JSON.stringify(D);
-    const metadata={name:GDRIVE_FILE_NAME,mimeType:'application/json'};
-
-    if(gdriveFileId){
-      // Update existing file
-      const form=new FormData();
-      form.append('metadata',new Blob([JSON.stringify(metadata)],{type:'application/json'}));
-      form.append('file',new Blob([content],{type:'application/json'}));
-
-      const res=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gdriveFileId}?uploadType=multipart`,{
-        method:'PATCH',
-        headers:{'Authorization':'Bearer '+gdriveToken},
-        body:form
-      });
-      if(!res.ok) throw new Error('Update failed');
-    } else {
-      // Create new file
-      const form=new FormData();
-      form.append('metadata',new Blob([JSON.stringify(metadata)],{type:'application/json'}));
-      form.append('file',new Blob([content],{type:'application/json'}));
-
-      const res=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{
-        method:'POST',
-        headers:{'Authorization':'Bearer '+gdriveToken},
-        body:form
-      });
-      if(!res.ok) throw new Error('Create failed');
-      const data=await res.json();
-      gdriveFileId=data.id;
-    }
-
-    D.lastSync=Date.now();save();
-    updateSyncBar('synced');
-  } catch(err){
-    console.error('Sync error:',err);
-    // Token might be expired
-    if(err.message.includes('401')||err.message.includes('403')){
-      gdriveReady=false;gdriveToken=null;
-      localStorage.removeItem('inspiree_gdrive_token');
-      localStorage.removeItem('inspiree_gdrive_expiry');
-      updateSyncBar('disconnected');
-    } else {
-      updateSyncBar('error');
-    }
+    updateSyncUI('synced');
+  }catch(err){
+    console.error('Sync up error:',err);
+    updateSyncUI('error');
+  }finally{
+    syncInProgress=false;
   }
 }
 
-async function syncFromGDrive(){
-  if(!gdriveReady||!gdriveToken||!gdriveFileId)return;
-
+// ── Download from Supabase ──
+async function syncDown(){
+  if(!D.pin)return false;
   try{
-    const res=await fetch(`https://www.googleapis.com/drive/v3/files/${gdriveFileId}?alt=media`,{
-      headers:{'Authorization':'Bearer '+gdriveToken}
-    });
-    if(!res.ok)return;
-    const remote=await res.json();
-    // Merge: if remote has newer notes, use remote
-    if(remote.notes&&remote.lastSync&&(!D.lastSync||remote.lastSync>D.lastSync)){
-      if(confirm('Des données plus récentes existent sur Google Drive. Les importer ?')){
-        const pin=D.pin; // Keep local PIN
-        D={...D,...remote,pin};
-        save();renderTags();renderNotes();
+    const pinHash=await hashPin(D.pin);
+    const rows=await supaFetch(`inspiree_data?user_pin=eq.${pinHash}&select=id,data,updated_at&order=updated_at.desc&limit=1`);
+    if(rows&&rows.length>0){
+      supaRowId=rows[0].id;
+      const remote=rows[0].data;
+      if(remote&&remote.notes){
+        // Merge: keep local PIN, take remote data if it has more/newer notes
+        const remoteTs=remote.notes.length?Math.max(...remote.notes.map(n=>n.editedTs||n.ts)):0;
+        const localTs=D.notes.length?Math.max(...D.notes.map(n=>n.editedTs||n.ts)):0;
+        if(remoteTs>localTs&&remote.notes.length>0){
+          const pin=D.pin;
+          const theme=D.theme;
+          D={...remote,pin,theme};
+          localStorage.setItem(SK,JSON.stringify(D));
+          return true; // data was updated
+        }
       }
     }
-  }catch(e){console.error('Download error:',e);}
+  }catch(err){
+    console.error('Sync down error:',err);
+  }
+  return false;
 }
 
-function startAutoSync(){
-  if(gdriveSyncInterval)clearInterval(gdriveSyncInterval);
-  // Auto-sync every 2 minutes
-  gdriveSyncInterval=setInterval(()=>{
-    if(gdriveReady)syncToGDrive();
-  },2*60*1000);
+// ── Hash PIN for storage (never store plain PIN remotely) ──
+async function hashPin(pin){
+  const encoder=new TextEncoder();
+  const data=encoder.encode(pin+'_inspiree_salt');
+  const hash=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
-function updateSyncBar(state){
-  const bar=document.getElementById('sync-bar');
-  const text=document.getElementById('sync-text');
-  const settingsBtn=document.getElementById('gdrive-settings-btn');
-  bar.className='sync-bar';
-  switch(state){
-    case 'connected':
-      text.textContent='☁ Google Drive connecté';
-      bar.classList.add('synced');
-      if(settingsBtn)settingsBtn.innerHTML='✅ Google Drive connecté';
-      break;
-    case 'syncing':
-      text.textContent='☁ Synchronisation…';
-      bar.classList.add('syncing');
-      break;
-    case 'synced':
-      text.textContent='☁ Synchronisé — '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-      bar.classList.add('synced');
-      break;
-    case 'error':
-      text.textContent='⚠ Erreur de synchronisation — cliquez pour réessayer';
-      break;
-    case 'disconnected':
-    default:
-      text.textContent='☁ Connecter Google Drive';
-      if(settingsBtn)settingsBtn.innerHTML='☁️ Connecter Google Drive';
+// ── Manual sync button ──
+async function manualSync(){
+  updateSyncUI('syncing');
+  try{
+    const updated=await syncDown();
+    if(updated){renderTags();renderNotes();}
+    await syncUp();
+  }catch(e){
+    updateSyncUI('error');
   }
 }
 
-// Auto-save triggers sync
+// ── Auto-sync: debounced on save ──
 const origSave=save;
 save=function(){
   origSave();
-  // Debounced sync to Drive
-  if(gdriveReady){
-    clearTimeout(save._timer);
-    save._timer=setTimeout(()=>syncToGDrive(),5000);
-  }
+  // Debounced sync to Supabase (3 seconds after last change)
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(()=>syncUp(),3000);
 };
+
+// ── Periodic sync every 2 minutes ──
+setInterval(()=>{if(D.pin)syncUp();},2*60*1000);
+
+// ── Sync UI ──
+function updateSyncUI(state){
+  const bar=document.getElementById('sync-bar');
+  const text=document.getElementById('sync-text');
+  const settingsEl=document.getElementById('sync-status-settings');
+  bar.className='sync-bar';
+  let statusText='';
+  switch(state){
+    case 'syncing':
+      text.textContent='☁ Synchronisation…';
+      bar.classList.add('syncing');
+      statusText='⏳ Synchronisation en cours…';
+      break;
+    case 'synced':
+      const time=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      text.textContent='☁ Synchronisé — '+time;
+      bar.classList.add('synced');
+      statusText='✅ Synchronisé à '+time;
+      break;
+    case 'error':
+      text.textContent='⚠ Erreur — appuie pour réessayer';
+      statusText='⚠️ Erreur de synchronisation';
+      break;
+    default:
+      text.textContent='☁ Synchronisé sur tous tes appareils';
+      bar.classList.add('synced');
+      statusText='☁️ Sync automatique activée';
+  }
+  if(settingsEl)settingsEl.textContent=statusText;
+}
 
 // ═══════════════════════════════════════
 // PWA — SERVICE WORKER & INSTALL
@@ -2077,10 +1995,18 @@ load();
 initPin();
 initPrompts();
 drawWheel();
-initGoogleDrive();
 
-// Check for Drive sync on load
-setTimeout(()=>{if(gdriveReady)syncFromGDrive();},2000);
+// Sync from Supabase after PIN unlock
+const origUnlock2=unlock;
+unlock=function(){
+  origUnlock2();
+  // Try to pull latest data from Supabase
+  syncDown().then(updated=>{
+    if(updated){renderTags();renderNotes();}
+    // Then push current state
+    setTimeout(()=>syncUp(),1000);
+  });
+};
 </script>
 </body>
 </html>
