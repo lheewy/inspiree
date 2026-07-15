@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Inspirée — Le refuge de tes pensées</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Inspirée">
+<meta name="theme-color" content="#FAF8F5">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23FAF8F5' width='100' height='100' rx='20'/><text x='50' y='62' text-anchor='middle' font-size='50'>🌿</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+
+/* ══════════════ THEMES ══════════════ */
+:root, [data-theme="lin"] {
+  --bg: #FAF8F5; --bg2: #F5F1EC; --card: #FFFFFF; --terra: #C2703E; --terra-light: #E8A87C;
+  --terra-pale: #F5E6DA; --text: #3A3A3A; --text2: #8A8580; --text3: #B8B2AB;
+  --border: #EDE8E3; --shadow: rgba(0,0,0,0.06); --glow: rgba(194,112,62,0.15);
+}
+[data-theme="sauge"] {
+  --bg: #F4F7F4; --bg2: #EBF0EB; --card: #FAFCFA; --terra: #6B8F71; --terra-light: #9DB8A0;
+  --terra-pale: #E2EDE3; --text: #2D3A2E; --text2: #7A8B7B; --text3: #A8B5A9;
+  --border: #D8E4D9; --shadow: rgba(0,0,0,0.05); --glow: rgba(107,143,113,0.15);
+}
+[data-theme="sable"] {
+  --bg: #FBF8F3; --bg2: #F3EDE4; --card: #FFFDF9; --terra: #C4956A; --terra-light: #D4B08E;
+  --terra-pale: #F0E4D5; --text: #4A3F34; --text2: #9A8D7E; --text3: #BDB2A4;
+  --border: #E8DFD3; --shadow: rgba(0,0,0,0.05); --glow: rgba(196,149,106,0.15);
+}
+[data-theme="nuit"] {
+  --bg: #1A1B2E; --bg2: #232440; --card: #262847; --terra: #C2703E; --terra-light: #E8A87C;
+  --terra-pale: rgba(194,112,62,0.15); --text: #E8E4DF; --text2: #9895A8; --text3: #6B6880;
+  --border: #3A3B58; --shadow: rgba(0,0,0,0.3); --glow: rgba(194,112,62,0.2);
+}
+[data-theme="automne"] {
+  --bg: #FDF8F3; --bg2: #F8EFE5; --card: #FFFCF8; --terra: #B85C38; --terra-light: #D4845E;
+  --terra-pale: #F5E0D0; --text: #3E2E23; --text2: #8C7568; --text3: #B8A396;
+  --border: #E8D8C8; --shadow: rgba(0,0,0,0.06); --glow: rgba(184,92,56,0.15);
+}
+[data-theme="fleur"] {
+  --bg: #FDF6F8; --bg2: #F8ECF0; --card: #FFFAFC; --terra: #C77D8E; --terra-light: #DDA3B0;
+  --terra-pale: #F5E2E8; --text: #3E2D33; --text2: #9A8088; --text3: #BCA8AE;
+  --border: #EEDDE2; --shadow: rgba(0,0,0,0.05); --glow: rgba(199,125,142,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100dvh; overflow-x: hidden;
+  transition: background .6s, color .6s;
+}
+
+.serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+/* ══════════════ ANIMATIONS ══════════════ */
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeInSlow { from{opacity:0} to{opacity:1} }
+@keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@keyframes spinWheel { 0%{transform:rotate(0)} 100%{transform:rotate(var(--spin-deg))} }
+@keyframes shake { 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+@keyframes leafGrow { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+@keyframes cardFlip { 0%{transform:rotateY(0)} 50%{transform:rotateY(90deg)} 100%{transform:rotateY(0)} }
+@keyframes slideUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+@keyframes gentlePulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+.fade-in { animation: fadeIn .6s ease both; }
+.fade-in-d1 { animation: fadeIn .6s .1s ease both; }
+.fade-in-d2 { animation: fadeIn .6s .2s ease both; }
+.fade-in-d3 { animation: fadeIn .6s .3s ease both; }
+.fade-in-d4 { animation: fadeIn .6s .4s ease both; }
+.fade-in-d5 { animation: fadeIn .6s .5s ease both; }
+
+/* ══════════════ PIN SCREEN ══════════════ */
+#pin-screen {
+  position:fixed; inset:0; z-index:9999; background:var(--bg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+}
+#pin-screen.hidden { display:none; }
+.pin-logo { font-size:48px; color:var(--terra); font-style:italic; font-weight:300; letter-spacing:-1px; }
+.pin-sub { color:var(--text2); font-size:13px; letter-spacing:2px; text-transform:uppercase; }
+.pin-dots { display:flex; gap:14px; margin:12px 0; }
+.pin-dot { width:14px; height:14px; border-radius:50%; border:2px solid var(--terra-light); background:transparent; transition:.25s; }
+.pin-dot.filled { background:var(--terra); border-color:var(--terra); transform:scale(1.1); }
+.pin-dot.error { border-color:#D9534F; background:#D9534F; animation:shake .4s; }
+.pin-pad { display:grid; grid-template-columns:repeat(3,68px); gap:10px; }
+.pin-btn {
+  width:68px; height:68px; border-radius:50%; border:1.5px solid var(--border);
+  background:var(--card); font-size:22px; color:var(--text); cursor:pointer;
+  font-family:'DM Sans'; transition:.2s;
+}
+.pin-btn:active { background:var(--terra-pale); transform:scale(.95); }
+.pin-btn.fn { font-size:13px; border:none; background:transparent; color:var(--text2); }
+.pin-msg { color:var(--text2); font-size:13px; max-width:260px; text-align:center; }
+
+/* ══════════════ WELCOME / MOOD ══════════════ */
+#welcome-screen {
+  position:fixed; inset:0; z-index:8000; background:var(--bg);
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  padding:40px 24px; text-align:center;
+}
+#welcome-screen.active { display:flex; }
+.welcome-greeting { font-size:28px; color:var(--text); font-weight:300; margin-bottom:4px; }
+.welcome-date { color:var(--text2); font-size:14px; margin-bottom:32px; }
+.welcome-quote {
+  max-width:400px; font-size:16px; font-style:italic; color:var(--text2); line-height:1.7;
+  margin-bottom:40px; padding:0 20px;
+}
+.welcome-mood-title { font-size:15px; color:var(--text2); margin-bottom:16px; }
+.mood-options { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-width:380px; }
+.mood-btn {
+  padding:12px 20px; border-radius:28px; border:1.5px solid var(--border);
+  background:var(--card); cursor:pointer; font-family:'DM Sans'; font-size:14px;
+  color:var(--text); transition:.25s; display:flex; align-items:center; gap:8px;
+}
+.mood-btn:hover { border-color:var(--terra); background:var(--terra-pale); }
+.mood-btn:active { transform:scale(.96); }
+.mood-btn.selected { background:var(--terra); color:#fff; border-color:var(--terra); }
+
+/* ══════════════ HOME ══════════════ */
+#home-screen {
+  position:fixed; inset:0; z-index:7000; background:var(--bg);
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  padding:40px 24px; text-align:center;
+}
+#home-screen.active { display:flex; }
+.home-logo { font-size:36px; color:var(--terra); font-style:italic; font-weight:300; margin-bottom:6px; }
+.home-tagline { color:var(--text2); font-size:14px; margin-bottom:48px; }
+.home-prompt-text {
+  font-size:20px; color:var(--text); font-weight:300; line-height:1.6; max-width:360px; margin-bottom:40px;
+}
+.home-main-btn {
+  padding:16px 40px; border-radius:32px; border:none; background:var(--terra); color:#fff;
+  font-family:'Cormorant Garamond', serif; font-size:18px; cursor:pointer; transition:.25s;
+  box-shadow: 0 4px 20px var(--glow); letter-spacing:.5px;
+}
+.home-main-btn:hover { transform:translateY(-2px); box-shadow: 0 8px 30px var(--glow); }
+.home-main-btn:active { transform:scale(.97); }
+.home-actions { display:flex; gap:20px; margin-top:32px; }
+.home-action {
+  display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;
+  color:var(--text2); font-size:13px; transition:.2s; background:none; border:none; font-family:'DM Sans';
+}
+.home-action:hover { color:var(--terra); }
+.home-action .icon { font-size:24px; }
+.home-stats-bar {
+  position:absolute; bottom:40px; display:flex; gap:32px; color:var(--text3); font-size:13px;
+}
+
+/* ══════════════ MAIN APP ══════════════ */
+#app { display:none; height:100dvh; }
+#app.active { display:flex; }
+
+/* Sidebar */
+.sidebar {
+  width:300px; background:var(--card); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; flex-shrink:0; transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.sidebar-header { padding:24px 20px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.sidebar-header .logo { font-size:22px; color:var(--terra); font-style:italic; font-weight:300; }
+.sidebar-icons { display:flex; gap:8px; }
+.icon-btn { background:none; border:none; font-size:18px; cursor:pointer; color:var(--text2); padding:4px; border-radius:6px; transition:.15s; }
+.icon-btn:hover { color:var(--terra); background:var(--terra-pale); }
+
+.sidebar-search { padding:12px 16px; }
+.sidebar-search input {
+  width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:10px;
+  background:var(--bg); font-family:'DM Sans'; font-size:14px; color:var(--text); outline:none; transition:.2s;
+}
+.sidebar-search input:focus { border-color:var(--terra); }
+.sidebar-search input::placeholder { color:var(--text3); }
+
+.sidebar-section-title { padding:16px 20px 8px; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text3); }
+.sidebar-tags { flex:1; overflow-y:auto; padding-bottom:12px; }
+.tag-item {
+  padding:11px 20px; cursor:pointer; display:flex; align-items:center; justify-content:space-between;
+  font-size:14px; color:var(--text); transition:.2s; border-left:3px solid transparent; gap:8px;
+}
+.tag-item:hover { background:var(--terra-pale); }
+.tag-item.active { background:var(--terra-pale); border-left-color:var(--terra); }
+.tag-item .tag-label { display:flex; align-items:center; gap:8px; flex:1; min-width:0; }
+.tag-item .tag-emoji { font-size:16px; flex-shrink:0; }
+.tag-item .tag-name { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tag-count { font-size:11px; color:var(--text3); background:var(--bg); padding:2px 8px; border-radius:10px; flex-shrink:0; }
+.tag-actions-wrap { display:none; gap:2px; flex-shrink:0; }
+.tag-item:hover .tag-actions-wrap { display:flex; }
+.tag-item:hover .tag-count { display:none; }
+.tag-act { background:none; border:none; cursor:pointer; color:var(--text3); font-size:13px; padding:2px 5px; border-radius:4px; }
+.tag-act:hover { color:var(--terra); background:var(--terra-pale); }
+
+.sidebar-footer { padding:12px 16px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:8px; }
+.add-tag-btn {
+  width:100%; padding:10px; border:1.5px dashed var(--border); border-radius:10px;
+  background:transparent; cursor:pointer; color:var(--text2); font-size:13px;
+  font-family:'DM Sans'; transition:.2s;
+}
+.add-tag-btn:hover { border-color:var(--terra); color:var(--terra); }
+
+/* Main */
+.main-area { flex:1; display:flex; flex-direction:column; min-width:0; }
+.topbar {
+  padding:14px 24px; border-bottom:1px solid var(--border); background:var(--card);
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-shrink:0;
+}
+.topbar-left { display:flex; align-items:center; gap:12px; }
+.menu-toggle { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.topbar-title { display:flex; align-items:center; gap:8px; }
+.topbar-title .emoji { font-size:20px; }
+.topbar-title h2 { font-size:20px; font-weight:400; }
+.topbar-actions { display:flex; gap:6px; }
+.btn {
+  padding:8px 14px; border-radius:10px; border:1.5px solid var(--border);
+  background:var(--card); cursor:pointer; font-family:'DM Sans'; font-size:13px;
+  color:var(--text); transition:.2s; display:flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.btn:hover { border-color:var(--terra); color:var(--terra); }
+.btn.primary { background:var(--terra); color:#fff; border-color:var(--terra); }
+.btn.primary:hover { filter:brightness(.9); }
+
+/* Notes feed — Moleskine style */
+.notes-feed { flex:1; overflow-y:auto; padding:24px; max-width:720px; margin:0 auto; width:100%; }
+.note-card {
+  background:var(--card); border-radius:14px; box-shadow:0 2px 12px var(--shadow);
+  padding:24px; margin-bottom:16px; border:1px solid var(--border); position:relative;
+  transition:.25s; animation: slideUp .4s ease both;
+}
+.note-card:hover { box-shadow:0 6px 24px var(--shadow); transform:translateY(-1px); }
+.note-meta { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.note-date { font-size:12px; color:var(--text3); }
+.note-mood { font-size:14px; }
+.note-tags-row { display:flex; gap:6px; flex-wrap:wrap; }
+.note-tag { font-size:11px; color:var(--terra); background:var(--terra-pale); padding:3px 10px; border-radius:8px; }
+.note-body { font-size:15px; line-height:1.8; white-space:pre-wrap; word-break:break-word; }
+.note-images { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.note-img { width:120px; height:120px; object-fit:cover; border-radius:10px; cursor:pointer; transition:.2s; border:1px solid var(--border); }
+.note-img:hover { transform:scale(1.05); box-shadow:0 4px 16px var(--shadow); }
+.note-actions-row { display:flex; gap:6px; margin-top:14px; opacity:0; transition:.2s; }
+.note-card:hover .note-actions-row { opacity:1; }
+.note-act { background:none; border:none; cursor:pointer; color:var(--text3); font-size:13px; padding:5px 10px; border-radius:8px; font-family:'DM Sans'; }
+.note-act:hover { color:var(--terra); background:var(--terra-pale); }
+
+/* Composer */
+.composer { padding:16px 24px; border-top:1px solid var(--border); background:var(--card); flex-shrink:0; }
+.composer-box {
+  max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:10px;
+  background:var(--bg); border-radius:14px; padding:16px; border:1.5px solid var(--border); transition:.2s;
+}
+.composer-box:focus-within { border-color:var(--terra); box-shadow:0 0 0 3px var(--glow); }
+.composer-box textarea {
+  width:100%; border:none; background:transparent; font-family:'Cormorant Garamond', serif;
+  font-size:17px; color:var(--text); resize:none; outline:none; min-height:28px; max-height:200px; line-height:1.7;
+}
+.composer-box textarea::placeholder { color:var(--text3); font-style:italic; }
+.composer-toolbar { display:flex; align-items:center; justify-content:space-between; }
+.composer-left { display:flex; gap:6px; }
+.composer-tool { background:none; border:none; font-size:18px; cursor:pointer; color:var(--text3); padding:4px 8px; border-radius:6px; transition:.15s; }
+.composer-tool:hover { color:var(--terra); background:var(--terra-pale); }
+.send-btn {
+  width:40px; height:40px; border-radius:50%; background:var(--terra); border:none;
+  color:#fff; font-size:18px; cursor:pointer; flex-shrink:0; transition:.25s;
+  display:flex; align-items:center; justify-content:center;
+}
+.send-btn:hover { filter:brightness(.9); transform:scale(1.05); }
+.send-btn:disabled { background:var(--border); cursor:default; transform:none; }
+.image-preview-row { display:flex; gap:8px; flex-wrap:wrap; }
+.img-preview { position:relative; }
+.img-preview img { width:60px; height:60px; object-fit:cover; border-radius:8px; border:1px solid var(--border); }
+.img-preview .remove-img {
+  position:absolute; top:-4px; right:-4px; width:18px; height:18px; border-radius:50%;
+  background:var(--terra); color:#fff; border:none; font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+
+/* ══════════════ PROMPT GENERATOR — CARD STYLE ══════════════ */
+.overlay { display:none; position:fixed; inset:0; z-index:5000; background:rgba(0,0,0,.35); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
+.overlay.open { display:flex; }
+
+.prompt-card-panel { background:var(--card); border-radius:20px; padding:36px; max-width:500px; width:92%; box-shadow:0 24px 80px rgba(0,0,0,.18); position:relative; }
+.prompt-card-panel h3 { font-size:24px; font-weight:300; margin-bottom:4px; }
+.prompt-card-panel .sub { color:var(--text2); font-size:13px; margin-bottom:24px; }
+.prompt-cats { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+.p-cat {
+  padding:8px 14px; border-radius:20px; border:1.5px solid var(--border);
+  background:transparent; cursor:pointer; font-family:'DM Sans'; font-size:13px;
+  color:var(--text); transition:.2s; display:flex; align-items:center; gap:5px;
+}
+.p-cat:hover, .p-cat.active { background:var(--terra); color:#fff; border-color:var(--terra); }
+.prompt-display {
+  background:var(--bg); border-radius:14px; padding:28px 24px; min-height:90px;
+  font-size:17px; line-height:1.7; color:var(--text); text-align:center;
+  display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+  transition:.3s;
+}
+.prompt-display.flipping { animation: cardFlip .5s ease; }
+.prompt-actions-row { display:flex; gap:10px; justify-content:center; }
+.close-x { position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text3); }
+.close-x:hover { color:var(--terra); }
+
+/* ══════════════ WHEEL ══════════════ */
+.wheel-panel { background:var(--card); border-radius:20px; padding:36px; max-width:420px; width:92%; box-shadow:0 24px 80px rgba(0,0,0,.18); text-align:center; position:relative; }
+.wheel-container { position:relative; width:260px; height:260px; margin:24px auto; }
+.wheel-svg { width:260px; height:260px; transition:transform 3s cubic-bezier(.17,.67,.12,.99); }
+.wheel-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:50px; height:50px; border-radius:50%; background:var(--card); box-shadow:0 2px 12px var(--shadow); display:flex; align-items:center; justify-content:center; font-size:24px; cursor:pointer; border:2px solid var(--border); transition:.2s; z-index:2; }
+.wheel-center:hover { transform:translate(-50%,-50%) scale(1.1); border-color:var(--terra); }
+.wheel-pointer { position:absolute; top:-8px; left:50%; transform:translateX(-50%); font-size:20px; z-index:3; }
+.wheel-result { margin-top:16px; font-size:17px; min-height:50px; display:flex; align-items:center; justify-content:center; color:var(--text); }
+
+/* ══════════════ CALENDAR ══════════════ */
+.calendar-panel { background:var(--card); border-radius:20px; padding:32px; max-width:520px; width:92%; box-shadow:0 24px 80px rgba(0,0,0,.18); position:relative; }
+.cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.cal-nav { background:none; border:none; cursor:pointer; font-size:18px; color:var(--text2); padding:4px 8px; border-radius:6px; }
+.cal-nav:hover { color:var(--terra); background:var(--terra-pale); }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; text-align:center; }
+.cal-day-label { font-size:11px; color:var(--text3); padding:4px 0; }
+.cal-day {
+  aspect-ratio:1; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  font-size:20px; cursor:default; position:relative; transition:.2s;
+}
+.cal-day.has-notes { cursor:pointer; }
+.cal-day.has-notes:hover { background:var(--terra-pale); transform:scale(1.1); }
+.cal-day .day-num { position:absolute; font-size:9px; color:var(--text3); bottom:2px; }
+.cal-day.today { box-shadow:inset 0 0 0 2px var(--terra); border-radius:10px; }
+.cal-stats { margin-top:20px; text-align:center; font-size:14px; color:var(--text2); line-height:1.8; }
+
+/* ══════════════ COLLECTIONS ══════════════ */
+.collections-panel { background:var(--card); border-radius:20px; padding:32px; max-width:560px; width:92%; max-height:80vh; overflow-y:auto; box-shadow:0 24px 80px rgba(0,0,0,.18); position:relative; }
+.collection-item {
+  padding:14px; border:1.5px solid var(--border); border-radius:12px; margin-bottom:10px;
+  cursor:pointer; transition:.2s; display:flex; align-items:center; justify-content:space-between;
+}
+.collection-item:hover { border-color:var(--terra); background:var(--terra-pale); }
+.coll-info { display:flex; align-items:center; gap:10px; }
+.coll-icon { font-size:24px; }
+.coll-name { font-size:15px; }
+.coll-count { font-size:12px; color:var(--text3); }
+
+/* ══════════════ THEMES PANEL ══════════════ */
+.themes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+.theme-choice {
+  padding:16px 12px; border-radius:12px; border:2px solid var(--border); cursor:pointer;
+  text-align:center; transition:.2s; background:var(--card);
+}
+.theme-choice:hover { border-color:var(--terra); }
+.theme-choice.active { border-color:var(--terra); background:var(--terra-pale); }
+.theme-choice .swatch { width:24px; height:24px; border-radius:50%; margin:0 auto 8px; }
+.theme-choice .name { font-size:13px; }
+
+/* ══════════════ AI INSIGHTS ══════════════ */
+.insights-panel { background:var(--card); border-radius:20px; padding:32px; max-width:480px; width:92%; box-shadow:0 24px 80px rgba(0,0,0,.18); position:relative; }
+.insight-card { background:var(--bg); border-radius:12px; padding:20px; margin-bottom:12px; font-size:15px; line-height:1.7; color:var(--text); }
+.insight-card .insight-icon { font-size:20px; margin-bottom:8px; }
+
+/* ══════════════ IMAGE LIGHTBOX ══════════════ */
+.lightbox { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.85); align-items:center; justify-content:center; cursor:pointer; }
+.lightbox.open { display:flex; }
+.lightbox img { max-width:90%; max-height:90%; border-radius:12px; box-shadow:0 8px 40px rgba(0,0,0,.4); }
+
+/* ══════════════ MODAL ══════════════ */
+.modal-overlay { display:none; position:fixed; inset:0; z-index:6000; background:rgba(0,0,0,.35); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal-box { background:var(--card); border-radius:16px; padding:28px; max-width:400px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,.15); }
+.modal-box h3 { margin-bottom:16px; font-weight:400; }
+.modal-box input, .modal-box select {
+  width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:10px;
+  font-family:'DM Sans'; font-size:15px; outline:none; margin-bottom:12px; background:var(--bg); color:var(--text);
+}
+.modal-box input:focus { border-color:var(--terra); }
+.modal-btns { display:flex; gap:10px; justify-content:flex-end; }
+
+/* ══════════════ EMPTY STATE ══════════════ */
+.empty-state { text-align:center; padding:60px 20px; color:var(--text3); }
+.empty-state .e-icon { font-size:48px; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
+.empty-state p { font-size:15px; line-height:1.7; }
+
+/* ══════════════ RESPONSIVE ══════════════ */
+@media (max-width:768px) {
+  .sidebar { position:fixed; top:0; left:0; bottom:0; z-index:4000; transform:translateX(-100%); width:300px; box-shadow:6px 0 24px rgba(0,0,0,.1); }
+  .sidebar.open { transform:translateX(0); }
+  .sb-overlay { display:none; position:fixed; inset:0; z-index:3999; background:rgba(0,0,0,.2); }
+  .sb-overlay.open { display:block; }
+  .menu-toggle { display:block; }
+  .topbar-actions .btn .label { display:none; }
+  .notes-feed { padding:16px; }
+  .composer { padding:12px 16px; }
+  .home-stats-bar { position:relative; bottom:auto; margin-top:40px; }
+}
+
+/* ══════════════ SCROLLBAR ══════════════ */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--terra-light); }
+
+/* ══════════════ EDIT TEXTAREA ══════════════ */
+.note-edit-area {
+  width:100%; border:1.5px solid var(--terra); border-radius:10px;
+  padding:14px; font-family:'Cormorant Garamond', serif; font-size:16px; line-height:1.7;
+  background:var(--bg); resize:vertical; min-height:60px; outline:none; color:var(--text);
+}
+
+/* ══════════════ SYNC BAR ══════════════ */
+.sync-bar {
+  padding:8px 20px; font-size:12px; text-align:center; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  background:var(--terra-pale); color:var(--terra); cursor:pointer; transition:.2s;
+}
+.sync-bar:hover { filter:brightness(.95); }
+.sync-bar.synced { background:rgba(107,143,113,0.15); color:#6B8F71; }
+.sync-bar.syncing { animation:gentlePulse 1.5s infinite; }
+.sync-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+/* ══════════════ LOCK BUTTON ══════════════ */
+.lock-btn {
+  position:fixed; bottom:24px; right:24px; z-index:2000;
+  width:48px; height:48px; border-radius:50%; border:none;
+  background:var(--card); color:var(--terra); font-size:20px;
+  cursor:pointer; box-shadow:0 4px 16px var(--shadow); transition:.25s;
+  display:flex; align-items:center; justify-content:center;
+  border:1.5px solid var(--border);
+}
+.lock-btn:hover { transform:scale(1.1); box-shadow:0 6px 24px var(--shadow); }
+.lock-btn:active { transform:scale(.95); }
+@media (max-width:768px) { .lock-btn { bottom:80px; right:16px; width:42px; height:42px; font-size:18px; } }
+
+/* ══════════════ PWA INSTALL BANNER ══════════════ */
+.install-banner {
+  display:none; position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  z-index:3000; background:var(--card); border-radius:14px; padding:16px 24px;
+  box-shadow:0 8px 32px rgba(0,0,0,.15); border:1px solid var(--border);
+  text-align:center; max-width:340px; width:90%; animation:slideUp .4s ease;
+}
+.install-banner.show { display:block; }
+.install-banner p { font-size:14px; margin-bottom:12px; color:var(--text); }
+.install-banner .install-actions { display:flex; gap:8px; justify-content:center; }
+</style>
+</head>
+<body data-theme="lin">
+
+<!-- ═══ PIN ═══ -->
+<div id="pin-screen">
+  <div class="pin-logo serif">Inspirée</div>
+  <div class="pin-sub" id="pin-title">Créez votre code PIN</div>
+  <div class="pin-dots" id="pin-dots"></div>
+  <div class="pin-pad" id="pin-pad"></div>
+  <div class="pin-msg" id="pin-msg"></div>
+</div>
+
+<!-- ═══ WELCOME ═══ -->
+<div id="welcome-screen">
+  <div class="welcome-greeting serif fade-in" id="w-greeting"></div>
+  <div class="welcome-date fade-in-d1" id="w-date"></div>
+  <div class="welcome-quote serif fade-in-d2" id="w-quote"></div>
+  <div class="welcome-mood-title fade-in-d3">Comment te sens-tu ?</div>
+  <div class="mood-options fade-in-d4" id="mood-options"></div>
+</div>
+
+<!-- ═══ HOME ═══ -->
+<div id="home-screen">
+  <div class="home-logo serif fade-in">Inspirée</div>
+  <div class="home-tagline fade-in-d1">Le refuge de tes pensées</div>
+  <div class="home-prompt-text serif fade-in-d2" id="home-prompt">Que souhaites-tu déposer aujourd'hui ?</div>
+  <button class="home-main-btn fade-in-d3" onclick="goToApp()">✍&ensp;Commencer à écrire</button>
+  <div class="home-actions fade-in-d4">
+    <button class="home-action" onclick="openPromptGen()"><span class="icon">✨</span>Inspirer</button>
+    <button class="home-action" onclick="goToApp()"><span class="icon">📖</span>Relire</button>
+    <button class="home-action" onclick="goToApp();setTimeout(()=>document.getElementById('search-input').focus(),400)"><span class="icon">🏷</span>Explorer</button>
+    <button class="home-action" onclick="openCalendar()"><span class="icon">🍃</span>Calendrier</button>
+  </div>
+  <div class="home-stats-bar fade-in-d5" id="home-stats"></div>
+</div>
+
+<!-- ═══ MAIN APP ═══ -->
+<div id="app">
+  <div class="sb-overlay" id="sb-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo serif">Inspirée</div>
+      <div class="sidebar-icons">
+        <button class="icon-btn" onclick="openCalendar()" title="Calendrier">🍃</button>
+        <button class="icon-btn" onclick="openInsights()" title="Observations">🔮</button>
+        <button class="icon-btn" onclick="openSettings()" title="Réglages">⚙</button>
+      </div>
+    </div>
+    <div class="sidebar-search">
+      <input type="text" id="search-input" placeholder="Rechercher…" oninput="filterNotes()" />
+    </div>
+    <div class="sidebar-section-title">Tes univers</div>
+    <div class="sidebar-tags" id="tag-list"></div>
+    <div class="sidebar-footer">
+      <button class="add-tag-btn" onclick="openAddTag()">＋ Nouveau univers</button>
+      <button class="add-tag-btn" onclick="openCollections()" style="border-style:solid;margin-top:4px;">📚 Collections</button>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <div class="sync-bar" id="sync-bar" onclick="handleSyncClick()">
+      <span class="sync-dot"></span>
+      <span id="sync-text">☁ Connecter Google Drive</span>
+    </div>
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title">
+          <span class="emoji" id="topbar-emoji">⊞</span>
+          <h2 class="serif" id="topbar-title">Tout</h2>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn" onclick="openWheel()">🎡 <span class="label">Roue</span></button>
+        <button class="btn" onclick="openPromptGen()">✨ <span class="label">Inspirer</span></button>
+        <button class="btn" onclick="exportPDF()">📄 <span class="label">PDF</span></button>
+        <button class="btn" onclick="goHome()">🏠</button>
+      </div>
+    </div>
+    <div class="notes-feed" id="notes-feed"></div>
+    <div class="composer">
+      <div class="composer-box">
+        <textarea id="note-input" placeholder="Dépose tes mots ici…" rows="1" oninput="autoGrow(this);toggleSend()"></textarea>
+        <div class="image-preview-row" id="img-preview-row"></div>
+        <div class="composer-toolbar">
+          <div class="composer-left">
+            <button class="composer-tool" onclick="document.getElementById('img-upload').click()" title="Ajouter une image">🖼</button>
+            <button class="composer-tool" onclick="openPromptGen()" title="Inspiration">✨</button>
+            <button class="composer-tool" onclick="openWheel()" title="Roue">🎡</button>
+            <input type="file" id="img-upload" accept="image/*" multiple style="display:none" onchange="handleImageUpload(event)">
+          </div>
+          <button class="send-btn" id="send-btn" onclick="addNote()" disabled>↑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROMPT GENERATOR ═══ -->
+<div class="overlay" id="prompt-overlay">
+  <div class="prompt-card-panel">
+    <button class="close-x" onclick="closeOverlay('prompt-overlay')">✕</button>
+    <h3 class="serif">✨ Tire une carte d'inspiration</h3>
+    <p class="sub">Choisis un domaine, puis laisse-toi guider</p>
+    <div class="prompt-cats" id="prompt-cats"></div>
+    <div class="prompt-display" id="prompt-display">Choisis un univers pour commencer…</div>
+    <div class="prompt-actions-row">
+      <button class="btn" onclick="generatePrompt()">↻ Autre carte</button>
+      <button class="btn primary" onclick="usePrompt()">Écrire avec ce prompt</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WHEEL ═══ -->
+<div class="overlay" id="wheel-overlay">
+  <div class="wheel-panel">
+    <button class="close-x" onclick="closeOverlay('wheel-overlay')">✕</button>
+    <h3 class="serif">🎡 Roue de l'inspiration</h3>
+    <p class="sub" style="margin-bottom:8px;">Appuie au centre pour tourner</p>
+    <div class="wheel-container">
+      <div class="wheel-pointer">▼</div>
+      <svg class="wheel-svg" id="wheel-svg" viewBox="0 0 260 260"></svg>
+      <div class="wheel-center" id="wheel-spin" onclick="spinWheel()">✦</div>
+    </div>
+    <div class="wheel-result serif" id="wheel-result"></div>
+    <div class="prompt-actions-row" style="margin-top:12px;">
+      <button class="btn primary" id="wheel-use-btn" onclick="useWheelPrompt()" style="display:none">Écrire avec ce prompt</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CALENDAR ═══ -->
+<div class="overlay" id="calendar-overlay">
+  <div class="calendar-panel">
+    <button class="close-x" onclick="closeOverlay('calendar-overlay')">✕</button>
+    <div class="cal-header">
+      <button class="cal-nav" onclick="calNav(-1)">‹</button>
+      <h3 class="serif" id="cal-title"></h3>
+      <button class="cal-nav" onclick="calNav(1)">›</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-stats" id="cal-stats"></div>
+  </div>
+</div>
+
+<!-- ═══ INSIGHTS ═══ -->
+<div class="overlay" id="insights-overlay">
+  <div class="insights-panel">
+    <button class="close-x" onclick="closeOverlay('insights-overlay')">✕</button>
+    <h3 class="serif" style="margin-bottom:16px;">🔮 Observations douces</h3>
+    <div id="insights-content"></div>
+  </div>
+</div>
+
+<!-- ═══ COLLECTIONS ═══ -->
+<div class="overlay" id="collections-overlay">
+  <div class="collections-panel">
+    <button class="close-x" onclick="closeOverlay('collections-overlay')">✕</button>
+    <h3 class="serif" style="margin-bottom:8px;">📚 Tes collections</h3>
+    <p class="sub" style="color:var(--text2);font-size:13px;margin-bottom:16px;">Rassemble tes notes en un livre</p>
+    <div id="collections-list"></div>
+    <button class="btn primary" onclick="createCollection()" style="width:100%;justify-content:center;margin-top:12px;">＋ Nouvelle collection</button>
+  </div>
+</div>
+
+<!-- ═══ SETTINGS ═══ -->
+<div class="overlay" id="settings-overlay">
+  <div class="modal-box" style="max-width:440px;">
+    <button class="close-x" onclick="closeOverlay('settings-overlay')">✕</button>
+    <h3 class="serif">⚙ Réglages</h3>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
+      <div class="sidebar-section-title" style="padding:8px 0 4px;">Thème</div>
+      <div class="themes-grid" id="themes-grid"></div>
+      <div class="sidebar-section-title" style="padding:12px 0 4px;">Google Drive</div>
+      <button class="btn" id="gdrive-settings-btn" onclick="handleSyncClick()" style="width:100%;justify-content:center;">☁️ Connecter Google Drive</button>
+      <p style="font-size:11px;color:var(--text3);text-align:center;line-height:1.5;margin-top:4px;">Synchronise automatiquement tes données sur Google Drive pour y accéder depuis tous tes appareils.</p>
+      <div class="sidebar-section-title" style="padding:12px 0 4px;">Données</div>
+      <button class="btn" onclick="changePin()" style="width:100%;justify-content:center;">🔑 Changer le code PIN</button>
+      <button class="btn" onclick="changeName()" style="width:100%;justify-content:center;">✏️ Changer le prénom</button>
+      <button class="btn" onclick="exportAllData()" style="width:100%;justify-content:center;">💾 Exporter (JSON)</button>
+      <button class="btn" onclick="document.getElementById('import-file').click()" style="width:100%;justify-content:center;">📂 Importer</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL ═══ -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <h3 class="serif" id="modal-title"></h3>
+    <input id="modal-input" />
+    <div id="modal-extra"></div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal()">Annuler</button>
+      <button class="btn primary" id="modal-confirm">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LOCK BUTTON ═══ -->
+<button class="lock-btn" id="lock-btn" onclick="lockApp()" title="Verrouiller" style="display:none">🔒</button>
+
+<!-- ═══ PWA INSTALL BANNER ═══ -->
+<div class="install-banner" id="install-banner">
+  <p class="serif">Installer <b>Inspirée</b> sur ton appareil ?</p>
+  <div class="install-actions">
+    <button class="btn" onclick="dismissInstall()">Plus tard</button>
+    <button class="btn primary" onclick="installPWA()">Installer</button>
+  </div>
+</div>
+
+<!-- ═══ LIGHTBOX ═══ -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <img id="lightbox-img" src="" />
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const SK = 'inspiree_v2';
+let D = {
+  pin: null, name: 'Valérie', theme: 'lin',
+  notes: [], tags: [], collections: [],
+  moods: {}, // date-string → mood
+};
+
+const DEFAULT_TAGS = [
+  { id:'poesie', name:'poésie', emoji:'🌸' },
+  { id:'energie', name:'énergie', emoji:'☀️' },
+  { id:'gratitude', name:'gratitude', emoji:'🤍' },
+  { id:'maman', name:'maman', emoji:'🌿' },
+  { id:'argent', name:'argent', emoji:'💰' },
+  { id:'business', name:'business', emoji:'🚀' },
+  { id:'reves', name:'rêves', emoji:'🌙' },
+  { id:'amour', name:'amour', emoji:'❤️' },
+  { id:'lecture', name:'lecture', emoji:'📚' },
+  { id:'voyage', name:'voyage', emoji:'✈️' },
+  { id:'foi', name:'foi', emoji:'🙏' },
+  { id:'nature', name:'nature', emoji:'🍃' },
+  { id:'journal', name:'journal', emoji:'📖' },
+  { id:'sante', name:'santé', emoji:'🧘' },
+  { id:'creativite', name:'créativité', emoji:'🎨' },
+  { id:'maison', name:'maison', emoji:'🏡' },
+];
+
+function load() {
+  try { const r = localStorage.getItem(SK); if (r) D = JSON.parse(r); } catch(e){}
+  if (!D.tags || !D.tags.length) D.tags = DEFAULT_TAGS;
+  if (!D.notes) D.notes = [];
+  if (!D.collections) D.collections = [];
+  if (!D.moods) D.moods = {};
+  if (!D.name) D.name = 'Valérie';
+  if (!D.theme) D.theme = 'lin';
+  document.body.setAttribute('data-theme', D.theme);
+}
+function save() { localStorage.setItem(SK, JSON.stringify(D)); }
+
+let activeTag = null;
+let searchQuery = '';
+let calMonth, calYear;
+let pendingImages = []; // base64 strings for new note
+let currentPromptCat = null;
+let currentPrompt = '';
+let wheelPrompt = '';
+
+// ═══════════════════════════════════════
+// QUOTES
+// ═══════════════════════════════════════
+const quotes = [
+  "Les pensées ont besoin d'un refuge avant de devenir des décisions.",
+  "Une émotion écrite cesse souvent de crier.",
+  "Écrire, c'est offrir une maison à ce qui flotte en soi.",
+  "Le silence de la page est le plus doux des confidents.",
+  "Chaque mot déposé ici est un pas vers toi-même.",
+  "Ce que l'on écrit pour soi finit par nous éclairer.",
+  "Ton journal ne te juge jamais. Il t'écoute.",
+  "Parfois les mots trouvent ce que le cœur cherchait.",
+  "Écrire est la forme la plus douce de la lucidité.",
+  "Tes pensées méritent un endroit beau pour exister.",
+  "Ralentir pour écrire, c'est s'offrir un rendez-vous avec soi.",
+  "La page blanche n'attend rien. Elle accueille tout.",
+  "Une pensée capturée est un trésor retrouvable.",
+  "L'écriture transforme le bruit intérieur en musique.",
+  "Chaque jour est une nouvelle page. Littéralement.",
+  "Ce que tu écris aujourd'hui éclairera demain.",
+  "Les mots sont des graines. Ce journal est ton jardin.",
+  "Prendre le temps d'écrire, c'est prendre soin de son âme.",
+  "Il y a du courage dans chaque mot sincère.",
+  "Le monde ralentit quand on prend un stylo.",
+];
+
+// ═══════════════════════════════════════
+// MOODS
+// ═══════════════════════════════════════
+const MOODS = [
+  { key:'rayonnante', label:'Rayonnante', emoji:'☀️' },
+  { key:'calme', label:'Calme', emoji:'🌊' },
+  { key:'fatiguee', label:'Fatiguée', emoji:'🌙' },
+  { key:'perdue', label:'Perdue', emoji:'🌫' },
+  { key:'inspiree', label:'Inspirée', emoji:'✨' },
+  { key:'reconnaissante', label:'Reconnaissante', emoji:'🤍' },
+  { key:'determinee', label:'Déterminée', emoji:'🔥' },
+  { key:'melancolique', label:'Mélancolique', emoji:'🍂' },
+];
+
+function moodEmoji(key) { const m = MOODS.find(x=>x.key===key); return m ? m.emoji : ''; }
+function todayStr() { const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0'); }
+
+// ═══════════════════════════════════════
+// PIN
+// ═══════════════════════════════════════
+let pinBuf='', pinStep='check', pinFirst='';
+
+function initPin() {
+  const pad=document.getElementById('pin-pad');
+  pad.innerHTML='';
+  for(let i=1;i<=9;i++) pad.innerHTML+=`<button class="pin-btn" onclick="pinIn('${i}')">${i}</button>`;
+  pad.innerHTML+=`<button class="pin-btn fn" onclick="pinDel()">⌫</button>`;
+  pad.innerHTML+=`<button class="pin-btn" onclick="pinIn('0')">0</button>`;
+  pad.innerHTML+=`<button class="pin-btn fn" id="pin-ok" onclick="pinOk()" style="display:none">OK</button>`;
+  if(!D.pin){pinStep='create';document.getElementById('pin-title').textContent='Créez votre code PIN (4-6 chiffres)';document.getElementById('pin-msg').textContent='Ce code protégera votre refuge.';}
+  else{pinStep='check';document.getElementById('pin-title').textContent='Entrez votre code PIN';document.getElementById('pin-msg').textContent='';}
+  pinBuf=''; renderDots();
+}
+
+function renderDots(){
+  const max=pinStep==='check'?D.pin.length:6;
+  const el=document.getElementById('pin-dots'); el.innerHTML='';
+  for(let i=0;i<max;i++) el.innerHTML+=`<div class="pin-dot ${i<pinBuf.length?'filled':''}"></div>`;
+  document.getElementById('pin-ok').style.display=(pinStep!=='check'&&pinBuf.length>=4)?'':'none';
+}
+function pinIn(n){const max=pinStep==='check'?D.pin.length:6;if(pinBuf.length>=max)return;pinBuf+=n;renderDots();if(pinStep==='check'&&pinBuf.length===D.pin.length)setTimeout(pinOk,200);}
+function pinDel(){pinBuf=pinBuf.slice(0,-1);renderDots();}
+function pinOk(){
+  if(pinStep==='create'){if(pinBuf.length<4)return;pinFirst=pinBuf;pinBuf='';pinStep='confirm';document.getElementById('pin-title').textContent='Confirmez votre code PIN';renderDots();}
+  else if(pinStep==='confirm'){if(pinBuf===pinFirst){D.pin=pinFirst;save();unlock();}else{showPinErr();pinStep='create';pinBuf='';pinFirst='';document.getElementById('pin-title').textContent='Créez votre code PIN';document.getElementById('pin-msg').textContent='Les codes ne correspondent pas.';setTimeout(renderDots,400);}}
+  else{if(pinBuf===D.pin)unlock();else{showPinErr();pinBuf='';setTimeout(renderDots,400);}}
+}
+function showPinErr(){document.querySelectorAll('.pin-dot').forEach(d=>d.classList.add('error'));}
+
+function unlock(){
+  document.getElementById('pin-screen').classList.add('hidden');
+  showWelcome();
+}
+
+// ═══════════════════════════════════════
+// WELCOME
+// ═══════════════════════════════════════
+function showWelcome(){
+  const ws=document.getElementById('welcome-screen');
+  ws.classList.add('active');
+  const hour=new Date().getHours();
+  let greet='Bonsoir';
+  if(hour<12)greet='Bonjour';else if(hour<18)greet='Bon après-midi';
+  document.getElementById('w-greeting').innerHTML=`${greet} ${D.name} ${hour<12?'☀️':hour<18?'🌤':'🌙'}`;
+  const d=new Date();
+  const opts={weekday:'long',day:'numeric',month:'long',year:'numeric'};
+  document.getElementById('w-date').textContent='Aujourd\'hui est une nouvelle page. — '+d.toLocaleDateString('fr-FR',opts);
+  document.getElementById('w-quote').textContent='« '+quotes[Math.floor(Math.random()*quotes.length)]+' »';
+
+  const mo=document.getElementById('mood-options');
+  mo.innerHTML=MOODS.map(m=>`<button class="mood-btn" onclick="selectMood('${m.key}')">${m.emoji} ${m.label}</button>`).join('');
+}
+
+function selectMood(key){
+  D.moods[todayStr()]=key; save();
+  document.querySelectorAll('.mood-btn').forEach(b=>{b.classList.remove('selected');if(b.textContent.includes(MOODS.find(m=>m.key===key).label))b.classList.add('selected');});
+  setTimeout(showHome,600);
+}
+
+// ═══════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════
+function showHome(){
+  document.getElementById('welcome-screen').classList.remove('active');
+  const hs=document.getElementById('home-screen');
+  hs.classList.add('active');
+  // Poetic stats
+  const nc=D.notes.length;
+  const days=new Set(D.notes.map(n=>new Date(n.ts).toDateString())).size;
+  document.getElementById('home-stats').innerHTML=nc?
+    `<span>Tu as confié <b>${nc}</b> pensée${nc>1?'s':''} à Inspirée</span><span>·</span><span>Tu as pris soin de toi pendant <b>${days}</b> jour${days>1?'s':''}</span>`
+    :'<span>Ton journal t\'attend…</span>';
+}
+
+function goToApp(){
+  document.getElementById('home-screen').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  renderTags(); renderNotes();
+}
+function goHome(){
+  document.getElementById('app').classList.remove('active');
+  showHome();
+}
+
+// ═══════════════════════════════════════
+// TAGS
+// ═══════════════════════════════════════
+function tagObj(id){return D.tags.find(t=>t.id===id);}
+
+function renderTags(){
+  const list=document.getElementById('tag-list');
+  const all=D.notes.length;
+  let html=`<div class="tag-item ${activeTag===null?'active':''}" onclick="selectTag(null)">
+    <div class="tag-label"><span class="tag-emoji">⊞</span><span class="tag-name">Tout</span></div>
+    <span class="tag-count">${all}</span></div>`;
+  D.tags.forEach(t=>{
+    const c=D.notes.filter(n=>n.tags.includes(t.id)).length;
+    html+=`<div class="tag-item ${activeTag===t.id?'active':''}" onclick="selectTag('${t.id}')">
+      <div class="tag-label"><span class="tag-emoji">${t.emoji}</span><span class="tag-name">${t.name}</span></div>
+      <span class="tag-count">${c}</span>
+      <div class="tag-actions-wrap">
+        <button class="tag-act" onclick="event.stopPropagation();renameTag('${t.id}')" title="Modifier">✎</button>
+        <button class="tag-act" onclick="event.stopPropagation();deleteTag('${t.id}')" title="Supprimer">✕</button>
+      </div></div>`;
+  });
+  list.innerHTML=html;
+}
+
+function selectTag(id){
+  activeTag=id;
+  const t=id?tagObj(id):null;
+  document.getElementById('topbar-title').textContent=t?t.name:'Tout';
+  document.getElementById('topbar-emoji').textContent=t?t.emoji:'⊞';
+  renderTags(); renderNotes(); closeSidebar();
+}
+
+function openAddTag(){
+  document.getElementById('modal-title').textContent='Nouvel univers';
+  document.getElementById('modal-input').value='';
+  document.getElementById('modal-input').placeholder='Nom…';
+  document.getElementById('modal-extra').innerHTML='<input id="modal-emoji" placeholder="Emoji (ex: 🌸)" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;outline:none;background:var(--bg);margin-bottom:12px;font-family:DM Sans;" />';
+  document.getElementById('modal-confirm').onclick=()=>{
+    const name=document.getElementById('modal-input').value.trim();
+    const emoji=document.getElementById('modal-emoji').value.trim()||'📌';
+    if(name){const id=name.toLowerCase().replace(/[^a-zà-ɏ0-9]/g,'');if(!D.tags.find(t=>t.id===id)){D.tags.push({id,name,emoji});save();renderTags();}}
+    closeModal();
+  };
+  openModal();
+}
+
+function renameTag(id){
+  const t=tagObj(id);if(!t)return;
+  document.getElementById('modal-title').textContent='Modifier #'+t.name;
+  document.getElementById('modal-input').value=t.name;
+  document.getElementById('modal-input').placeholder='Nouveau nom…';
+  document.getElementById('modal-extra').innerHTML=`<input id="modal-emoji" value="${t.emoji}" placeholder="Emoji" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;outline:none;background:var(--bg);margin-bottom:12px;font-family:DM Sans;" />`;
+  document.getElementById('modal-confirm').onclick=()=>{
+    const name=document.getElementById('modal-input').value.trim();
+    const emoji=document.getElementById('modal-emoji').value.trim()||t.emoji;
+    if(name){const newId=name.toLowerCase().replace(/[^a-zà-ɏ0-9]/g,'');t.name=name;t.emoji=emoji;
+      D.notes.forEach(n=>{const i=n.tags.indexOf(id);if(i>-1)n.tags[i]=newId;});
+      t.id=newId; if(activeTag===id)activeTag=newId;
+      save();renderTags();renderNotes();}
+    closeModal();
+  };
+  openModal();
+}
+
+function deleteTag(id){
+  const t=tagObj(id);if(!t)return;
+  if(!confirm(`Supprimer l'univers ${t.emoji} ${t.name} ?`))return;
+  D.tags=D.tags.filter(x=>x.id!==id);
+  D.notes.forEach(n=>{n.tags=n.tags.filter(x=>x!==id);});
+  if(activeTag===id){activeTag=null;document.getElementById('topbar-title').textContent='Tout';document.getElementById('topbar-emoji').textContent='⊞';}
+  save();renderTags();renderNotes();
+}
+
+// ═══════════════════════════════════════
+// NOTES
+// ═══════════════════════════════════════
+function getFilteredNotes(){
+  let notes=activeTag?D.notes.filter(n=>n.tags.includes(activeTag)):[...D.notes];
+  if(searchQuery){const q=searchQuery.toLowerCase();notes=notes.filter(n=>n.text.toLowerCase().includes(q)||n.tags.some(t=>{const to=tagObj(t);return to&&to.name.toLowerCase().includes(q);}));}
+  notes.sort((a,b)=>b.ts-a.ts);
+  return notes;
+}
+
+function renderNotes(){
+  const feed=document.getElementById('notes-feed');
+  const notes=getFilteredNotes();
+  if(!notes.length){
+    feed.innerHTML=`<div class="empty-state"><div class="e-icon">✦</div><p>Aucune note ici pour le moment.<br><span class="serif" style="font-style:italic;color:var(--terra);">Commence à écrire, laisse tes mots trouver leur place…</span></p></div>`;
+    return;
+  }
+  feed.innerHTML=notes.map((n,i)=>{
+    const tagHtml=n.tags.map(tid=>{const to=tagObj(tid);return to?`<span class="note-tag">${to.emoji} ${to.name}</span>`:`<span class="note-tag">#${tid}</span>`;}).join('');
+    const imgHtml=n.images&&n.images.length?`<div class="note-images">${n.images.map((src,j)=>`<img class="note-img" src="${src}" onclick="openLightbox('${src.replace(/'/g,"\\'")}')" />`).join('')}</div>`:'';
+    const mood=D.moods[dateStr(n.ts)];
+    return `<div class="note-card" style="animation-delay:${Math.min(i*0.05,0.3)}s">
+      <div class="note-meta">
+        <span class="note-date">${mood?moodEmoji(mood)+' ':''}${formatDate(n.ts)}${n.editedTs?' · modifié':''}</span>
+        <div class="note-tags-row">${tagHtml}</div>
+      </div>
+      <div class="note-body" id="body-${n.id}">${renderText(n.text)}</div>
+      ${imgHtml}
+      <div class="note-actions-row">
+        <button class="note-act" onclick="editNote('${n.id}')">✎ Modifier</button>
+        <button class="note-act" onclick="deleteNote('${n.id}')">✕ Supprimer</button>
+      </div></div>`;
+  }).join('');
+}
+
+function addNote(){
+  const input=document.getElementById('note-input');
+  const text=input.value.trim();
+  if(!text&&!pendingImages.length)return;
+  const foundTags=[];
+  const re=/#([\wÀ-ɏé]+)/g; let m;
+  while((m=re.exec(text))!==null){
+    const w=m[1].toLowerCase();
+    foundTags.push(w);
+    if(!D.tags.find(t=>t.id===w)){D.tags.push({id:w,name:m[1],emoji:'📌'});}
+  }
+  const note={
+    id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+    text, tags:foundTags.length?[...new Set(foundTags)]:(activeTag?[activeTag]:[]),
+    ts:Date.now(), editedTs:null,
+    images:[...pendingImages]
+  };
+  D.notes.push(note); save();
+  input.value=''; pendingImages=[]; document.getElementById('img-preview-row').innerHTML='';
+  autoGrow(input); toggleSend();
+  renderTags(); renderNotes();
+}
+
+function editNote(id){
+  const n=D.notes.find(x=>x.id===id);if(!n)return;
+  const el=document.getElementById('body-'+id);
+  el.innerHTML=`<textarea class="note-edit-area" id="edit-${id}" oninput="autoGrow(this)">${esc(n.text)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="btn primary" onclick="saveEdit('${id}')">Sauvegarder</button>
+      <button class="btn" onclick="renderNotes()">Annuler</button></div>`;
+  const ta=document.getElementById('edit-'+id); ta.focus(); autoGrow(ta);
+}
+
+function saveEdit(id){
+  const ta=document.getElementById('edit-'+id);const n=D.notes.find(x=>x.id===id);if(!n||!ta)return;
+  n.text=ta.value.trim(); n.editedTs=Date.now();
+  const foundTags=[];const re=/#([\wÀ-ɏé]+)/g;let m;
+  while((m=re.exec(n.text))!==null){const w=m[1].toLowerCase();foundTags.push(w);if(!D.tags.find(t=>t.id===w))D.tags.push({id:w,name:m[1],emoji:'📌'});}
+  if(foundTags.length)n.tags=[...new Set(foundTags)];
+  save();renderTags();renderNotes();
+}
+
+function deleteNote(id){if(!confirm('Supprimer cette note ?'))return;D.notes=D.notes.filter(x=>x.id!==id);save();renderTags();renderNotes();}
+
+function filterNotes(){searchQuery=document.getElementById('search-input').value.trim();renderNotes();}
+
+// ═══════════════════════════════════════
+// IMAGES
+// ═══════════════════════════════════════
+function handleImageUpload(e){
+  const files=e.target.files;
+  for(const f of files){
+    if(!f.type.startsWith('image/'))continue;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      pendingImages.push(ev.target.result);
+      renderPendingImages();
+      toggleSend();
+    };
+    reader.readAsDataURL(f);
+  }
+  e.target.value='';
+}
+
+function renderPendingImages(){
+  const row=document.getElementById('img-preview-row');
+  row.innerHTML=pendingImages.map((src,i)=>`<div class="img-preview"><img src="${src}"/><button class="remove-img" onclick="removePendingImg(${i})">✕</button></div>`).join('');
+}
+function removePendingImg(i){pendingImages.splice(i,1);renderPendingImages();toggleSend();}
+
+function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.add('open');}
+
+// ═══════════════════════════════════════
+// PROMPTS — 500+
+// ═══════════════════════════════════════
+const PROMPTS = {
+  '🌿 Spiritualité': [
+    "Quel message votre âme essaie-t-elle de vous transmettre en ce moment ?",
+    "Décrivez un moment où vous avez ressenti une connexion profonde avec l'univers.",
+    "Si votre intuition avait une voix, que vous dirait-elle aujourd'hui ?",
+    "Quel rituel pourriez-vous créer pour honorer votre lumière intérieure ?",
+    "Écrivez une lettre à votre futur moi spirituel.",
+    "Quelle leçon spirituelle avez-vous apprise cette semaine ?",
+    "Quel signe l'univers vous a-t-il envoyé récemment ?",
+    "Comment cultivez-vous le silence dans votre quotidien ?",
+    "Quelle prière ou intention souhaitez-vous poser aujourd'hui ?",
+    "Décrivez votre sanctuaire intérieur.",
+    "Qu'est-ce que le sacré signifie pour vous ?",
+    "Si vous pouviez parler à votre guide intérieur, que lui demanderiez-vous ?",
+    "Quelle croyance limitante êtes-vous prête à laisser partir ?",
+    "Comment la gratitude transforme-t-elle votre regard sur la vie ?",
+    "Décrivez un moment de grâce inattendu.",
+    "Quelle est la plus belle synchronicité que vous ayez vécue ?",
+    "Comment vous connectez-vous au divin dans les gestes du quotidien ?",
+    "Si votre âme pouvait choisir un paysage pour se reposer, lequel serait-ce ?",
+    "Quelle est la plus grande vérité que vous portez en vous ?",
+    "Écrivez un mantra pour cette semaine.",
+    "Que signifie « lâcher prise » pour vous concrètement ?",
+    "Quand avez-vous senti que quelque chose de plus grand vous guidait ?",
+    "Quel livre ou enseignement a profondément changé votre vision ?",
+    "Comment accueillez-vous l'incertitude avec confiance ?",
+    "Imaginez une conversation avec votre moi de dans 10 ans.",
+    "Quel est le cadeau caché dans votre épreuve actuelle ?",
+    "Comment nourrissez-vous votre foi au quotidien ?",
+    "Écrivez une prière de remerciement pour ce que vous avez.",
+    "Quelle partie de vous demande à être vue et entendue ?",
+    "Si chaque jour était sacré, que feriez-vous différemment ?",
+    "Quel est le son qui apaise votre esprit ?",
+    "Décrivez votre relation avec le temps.",
+    "Quelle blessure ancienne est prête à guérir ?",
+    "Comment votre souffrance passée vous a-t-elle rendue plus sage ?",
+    "Qu'aimeriez-vous enseigner au monde ?",
+  ],
+  '☀️ Énergie': [
+    "Comment décririez-vous votre énergie en ce moment avec une couleur et une texture ?",
+    "Quelles sont les 3 choses qui rechargent le plus vos batteries ?",
+    "Identifiez ce qui draine votre énergie et imaginez comment vous en libérer.",
+    "Si votre corps pouvait parler, quel message vous transmettrait-il ?",
+    "Décrivez votre routine matinale idéale pour une énergie optimale.",
+    "Quel aliment, lieu ou personne vous donne instantanément de l'énergie ?",
+    "Créez une affirmation puissante pour dynamiser votre journée.",
+    "Comment transformer une énergie lourde en légèreté aujourd'hui ?",
+    "Dessinez avec des mots le flux d'énergie dans votre corps.",
+    "Quels cycles naturels influencent votre énergie ?",
+    "À quel moment de la journée êtes-vous la plus puissante ?",
+    "Quel mouvement physique vous fait vous sentir vivante ?",
+    "Comment votre alimentation influence-t-elle votre humeur ?",
+    "Décrivez l'énergie de votre espace de vie.",
+    "Que pouvez-vous éliminer pour alléger votre quotidien ?",
+    "Si votre énergie était un animal, lequel serait-ce ?",
+    "Quel est votre refuge quand vous êtes épuisée ?",
+    "Comment accueillez-vous la fatigue sans culpabilité ?",
+    "Quelle musique recharge vos batteries ?",
+    "Décrivez votre état énergétique idéal.",
+    "Quelles pensées vous donnent de l'élan ?",
+    "Comment vous protégez-vous des énergies négatives ?",
+    "Quel est votre rituel du soir pour bien dormir ?",
+    "Imaginez votre énergie comme une rivière — comment coule-t-elle ?",
+    "Que faites-vous quand tout semble trop lourd ?",
+    "Quel geste simple vous reconnecte à votre vitalité ?",
+    "Comment équilibrez-vous donner et recevoir ?",
+    "Quelle saison correspond le mieux à votre énergie actuelle ?",
+    "Décrivez un lieu qui vous ressource profondément.",
+    "Quels sont vos signaux d'alerte quand votre énergie baisse ?",
+    "Comment transformez-vous la colère en force créatrice ?",
+    "Quel est le plus beau cadeau que vous puissiez faire à votre corps ?",
+    "Si vous pouviez recharger votre énergie en un instant, comment ?",
+    "Quelle habitude voudriez-vous installer pour plus de vitalité ?",
+    "Décrivez le matin parfait.",
+  ],
+  '🌸 Poésie': [
+    "Écrivez un haïku sur l'instant présent.",
+    "Décrivez le lever du soleil comme si c'était la première fois.",
+    "Transformez votre émotion du moment en un poème de 5 lignes.",
+    "Écrivez une ode à quelque chose d'ordinaire que vous chérissez.",
+    "Capturez le silence entre deux battements de cœur en mots.",
+    "Si la pluie pouvait chanter, quelle serait sa mélodie ?",
+    "Écrivez un poème en commençant chaque vers par « Je suis… »",
+    "Décrivez le goût d'un souvenir heureux.",
+    "Inventez une métaphore pour le passage du temps.",
+    "Écrivez une lettre poétique à la nuit.",
+    "Que murmure le vent quand personne n'écoute ?",
+    "Décrivez la couleur du silence.",
+    "Écrivez un poème avec seulement 10 mots.",
+    "Si vos larmes pouvaient parler, que diraient-elles ?",
+    "Décrivez l'odeur de votre enfance.",
+    "Écrivez un poème sur les mains de quelqu'un que vous aimez.",
+    "Capturez en mots le moment exact entre le jour et la nuit.",
+    "Si votre cœur était un paysage, que verrait-on ?",
+    "Écrivez un poème sans utiliser le mot « je ».",
+    "Décrivez la sensation de marcher pieds nus sur l'herbe.",
+    "Inventez un mot pour une émotion qui n'en a pas encore.",
+    "Écrivez une berceuse pour votre enfant intérieur.",
+    "Décrivez la lumière de fin d'après-midi.",
+    "Si la mer écrivait une lettre, à qui serait-elle adressée ?",
+    "Écrivez un poème qui commence et finit par le même mot.",
+    "Décrivez le son d'un souvenir.",
+    "Que dirait la lune si elle pouvait vous voir ?",
+    "Écrivez un poème sur le courage.",
+    "Décrivez un arbre comme s'il était votre meilleur ami.",
+    "Si les étoiles pouvaient pleurer, pourquoi pleureraient-elles ?",
+    "Capturez l'essence d'un café du matin en poème.",
+    "Écrivez sur ce que signifie « rentrer chez soi ».",
+    "Décrivez l'espace entre deux pensées.",
+    "Si votre vie était un poème, quel en serait le titre ?",
+    "Écrivez un poème de gratitude au sommeil.",
+  ],
+  '❤️ Amour': [
+    "Quelle est votre définition personnelle de l'amour ?",
+    "Décrivez un geste d'amour qui vous a profondément touchée.",
+    "Écrivez une lettre d'amour à vous-même.",
+    "Comment montrez-vous votre amour aux autres ?",
+    "Quel est votre langage de l'amour ?",
+    "Décrivez le moment où vous avez su que c'était de l'amour.",
+    "Comment l'amour de soi transforme-t-il vos relations ?",
+    "Quelle est la plus belle déclaration que vous ayez reçue ?",
+    "Comment aimez-vous être aimée ?",
+    "Décrivez l'amour en trois métaphores.",
+    "Qu'avez-vous appris de vos relations passées ?",
+    "Comment cultivez-vous l'amour au quotidien ?",
+    "Quel acte de tendresse aimeriez-vous recevoir aujourd'hui ?",
+    "Si l'amour avait un parfum, lequel serait-ce ?",
+    "Écrivez à la personne que vous aimez sans filtre.",
+    "Comment pardonnez-vous ceux qui vous ont blessée ?",
+    "Quelle est votre plus belle histoire d'amitié ?",
+    "Comment l'amour vous a-t-il transformée ?",
+    "Décrivez un câlin parfait.",
+    "Qu'est-ce que l'amour inconditionnel signifie pour vous ?",
+    "Comment prenez-vous soin de votre relation avec vous-même ?",
+    "Quel est le plus beau souvenir que vous partagez avec quelqu'un ?",
+    "Comment guérissez-vous d'un cœur brisé ?",
+    "Décrivez la personne que vous admirez le plus.",
+    "Si vous pouviez dire une chose à quelqu'un, sans conséquence, que diriez-vous ?",
+    "Quel est le geste le plus courageux que l'amour vous ait fait faire ?",
+    "Comment vous sentez-vous quand vous êtes profondément aimée ?",
+    "Quelle leçon l'amour essaie-t-il de vous enseigner en ce moment ?",
+    "Décrivez la chaleur d'être comprise.",
+    "Si l'amour était un lieu, où serait-il ?",
+  ],
+  '👶 Parentalité': [
+    "Quel moment avec votre enfant vous a fait sourire cette semaine ?",
+    "Quelle valeur souhaitez-vous le plus transmettre ?",
+    "Décrivez un défi parental récent et ce qu'il vous a appris.",
+    "Écrivez une lettre à votre enfant qu'il lira dans 10 ans.",
+    "Quel type de parent rêviez-vous d'être ?",
+    "Comment accueillez-vous les émotions difficiles de votre enfant ?",
+    "Quel rituel familial aimeriez-vous créer ?",
+    "Qu'avez-vous appris de votre enfant cette semaine ?",
+    "Comment prendre soin de vous en tant que parent ?",
+    "Imaginez votre famille dans 5 ans.",
+    "Quel est le plus beau cadeau invisible que vous faites à votre enfant ?",
+    "Comment gérez-vous la culpabilité parentale ?",
+    "Décrivez le rire de votre enfant.",
+    "Quel livre d'enfant vous a marquée ?",
+    "Comment parlez-vous des émotions avec votre enfant ?",
+    "Quel moment de votre enfance aimeriez-vous recréer ?",
+    "Comment enseignez-vous la gentillesse ?",
+    "Décrivez le coucher idéal.",
+    "Quelle phrase de votre enfant vous a émue ?",
+    "Comment trouvez-vous l'équilibre entre fermeté et douceur ?",
+    "Que voudriez-vous que votre enfant dise de vous plus tard ?",
+    "Comment gérez-vous les conflits entre frères et sœurs ?",
+    "Quel est votre moment préféré de la journée avec votre enfant ?",
+    "Comment la parentalité vous a-t-elle transformée ?",
+    "Quelle est votre plus grande fierté en tant que parent ?",
+    "Décrivez un dimanche parfait en famille.",
+    "Comment apprenez-vous à lâcher prise en tant que parent ?",
+    "Quel conseil donneriez-vous à un nouveau parent ?",
+    "Comment transmettez-vous votre culture et vos traditions ?",
+    "Si votre enfant pouvait lire votre journal, que voudriez-vous qu'il y trouve ?",
+  ],
+  '💰 Argent': [
+    "Quelle est votre relation émotionnelle avec l'argent ?",
+    "Quelles croyances limitantes avez-vous héritées sur l'argent ?",
+    "Décrivez votre vision de l'abondance.",
+    "Si l'argent n'était pas un problème, que feriez-vous de vos journées ?",
+    "Comment pouvez-vous créer plus de valeur dans votre vie ?",
+    "Quelle est votre plus grande peur financière ?",
+    "Écrivez une lettre à l'argent comme à une personne.",
+    "Comment vous sentez-vous quand vous dépensez pour vous ?",
+    "Quels sont vos trois objectifs financiers pour cette année ?",
+    "Comment l'argent sert-il vos valeurs profondes ?",
+    "Quelle habitude financière aimeriez-vous changer ?",
+    "Comment pourriez-vous générer un revenu passif ?",
+    "Décrivez votre vie financièrement libre.",
+    "Quelle est votre meilleure décision financière ?",
+    "Comment enseigneriez-vous l'argent à votre enfant ?",
+    "Qu'est-ce que la richesse signifie vraiment pour vous ?",
+    "Comment célébrez-vous vos succès financiers ?",
+    "Quelle est votre prochaine étape vers la liberté financière ?",
+    "Comment l'argent influence-t-il vos décisions ?",
+    "Imaginez recevoir un héritage inattendu. Que faites-vous ?",
+    "Quelle compétence pourriez-vous monétiser ?",
+    "Comment équilibrez-vous épargne et plaisir ?",
+    "Décrivez votre rapport au luxe.",
+    "Quelle est la chose la plus précieuse que l'argent ne peut acheter ?",
+    "Comment attirer l'abondance dans votre vie ?",
+  ],
+  '🚀 Entrepreneuriat': [
+    "Décrivez votre vision professionnelle en une phrase puissante.",
+    "Quels sont les 3 premiers pas vers votre prochain objectif ?",
+    "Identifiez votre super-pouvoir professionnel.",
+    "Que feriez-vous si l'échec n'existait pas ?",
+    "Écrivez la bio de votre futur soi professionnel.",
+    "Quel obstacle actuel pourrait être une opportunité déguisée ?",
+    "Comment votre projet sert-il votre mission de vie ?",
+    "Quelles compétences voulez-vous développer cette année ?",
+    "Quel mentor imaginaire choisiriez-vous ?",
+    "Visualisez votre journée de travail idéale.",
+    "Quel problème voulez-vous résoudre dans le monde ?",
+    "Comment vous démarquez-vous de la concurrence ?",
+    "Décrivez votre client idéal en détail.",
+    "Quelle est votre plus grande leçon entrepreneuriale ?",
+    "Comment gérez-vous le doute et l'incertitude ?",
+    "Quel est votre « pourquoi » profond ?",
+    "Comment restez-vous motivée les jours difficiles ?",
+    "Décrivez le lancement parfait de votre prochain projet.",
+    "Quels sont vos non-négociables dans votre business ?",
+    "Comment mesurez-vous le succès autrement qu'en chiffres ?",
+    "Quel est le service que vous rêvez de créer ?",
+    "Comment allez-vous au-delà de votre zone de confort ?",
+    "Décrivez votre espace de travail idéal.",
+    "Quelle est votre stratégie pour les 90 prochains jours ?",
+    "Comment alignez-vous vos valeurs et votre business ?",
+    "Quel impact voulez-vous avoir sur votre communauté ?",
+    "Si vous deviez pivoter demain, dans quelle direction iriez-vous ?",
+    "Comment construisez-vous votre réseau avec authenticité ?",
+    "Quelle est la chose que vous devez arrêter de faire pour avancer ?",
+    "Imaginez votre business dans 5 ans. Que voyez-vous ?",
+  ],
+  '🌙 Intuition': [
+    "Quel pressentiment avez-vous ignoré et regretté ?",
+    "Comment distinguez-vous la peur de l'intuition ?",
+    "Décrivez un moment où votre instinct vous a sauvée.",
+    "Comment renforcez-vous votre connexion intuitive ?",
+    "Quelle est la première pensée qui vous vient en fermant les yeux ?",
+    "Si votre intuition avait une forme, quelle serait-elle ?",
+    "Quel rêve récent mérite votre attention ?",
+    "Comment votre corps vous envoie-t-il des signaux ?",
+    "Quelle décision devriez-vous prendre avec le cœur plutôt que la tête ?",
+    "Décrivez le silence intérieur.",
+    "Comment accueillez-vous les coïncidences ?",
+    "Quel est votre rêve récurrent et que signifie-t-il ?",
+    "Si votre subconscient pouvait vous écrire une lettre, que dirait-il ?",
+    "Comment développez-vous votre sixième sens ?",
+    "Quelle question poseriez-vous à votre moi le plus sage ?",
+    "Décrivez un moment de clarté soudaine.",
+    "Comment la nature parle-t-elle à votre intuition ?",
+    "Quel animal-totem vous guide en ce moment ?",
+    "Comment vous sentez-vous quand vous suivez votre intuition ?",
+    "Quelle vérité refusez-vous d'entendre ?",
+  ],
+  '🧘 Méditation': [
+    "Décrivez votre état intérieur en ce moment précis.",
+    "Qu'observez-vous quand vous fermez les yeux pendant une minute ?",
+    "Comment décririez-vous le silence ?",
+    "Quelle pensée revient sans cesse ? Accueillez-la sans jugement.",
+    "Si votre esprit était un ciel, quel temps ferait-il ?",
+    "Décrivez votre respiration comme un poème.",
+    "Quelle tension physique pouvez-vous relâcher maintenant ?",
+    "Imaginez un lieu de paix absolue. Décrivez-le.",
+    "Comment vous sentez-vous après 5 minutes de silence ?",
+    "Quelle pensée pouvez-vous laisser passer comme un nuage ?",
+    "Décrivez la sensation de vos pieds sur le sol.",
+    "Qu'est-ce que « être présente » signifie pour vous ?",
+    "Quel est le son le plus subtil que vous entendez maintenant ?",
+    "Comment accueillez-vous une pensée désagréable ?",
+    "Décrivez la sensation de l'air qui entre dans vos poumons.",
+    "Quel mantra résonne avec votre journée ?",
+    "Comment transformez-vous l'agitation en calme ?",
+    "Décrivez votre ancrage — qu'est-ce qui vous tient ?",
+    "Que lâcheriez-vous si vous pouviez tout déposer ?",
+    "Comment la méditation a-t-elle changé votre vie ?",
+  ],
+  '🎨 Créativité': [
+    "Quel projet créatif rêvez-vous de réaliser ?",
+    "Comment nourrissez-vous votre créativité au quotidien ?",
+    "Décrivez un moment de flow créatif.",
+    "Si vous pouviez maîtriser un art en un jour, lequel ?",
+    "Quelle couleur représente votre créativité aujourd'hui ?",
+    "Comment surmontez-vous le syndrome de la page blanche ?",
+    "Décrivez votre rituel créatif idéal.",
+    "Quelle œuvre d'art vous a profondément émue ?",
+    "Comment la créativité vous aide-t-elle à guérir ?",
+    "Si vous étiez un instrument de musique, lequel seriez-vous ?",
+    "Quel est le lien entre vos émotions et votre créativité ?",
+    "Comment intégrer plus de beauté dans votre quotidien ?",
+    "Décrivez un projet que vous avez abandonné et que vous aimeriez reprendre.",
+    "Quelle est votre plus grande création ?",
+    "Comment osez-vous être imparfaite dans votre art ?",
+    "Quel lieu vous inspire le plus ?",
+    "Décrivez votre muse intérieure.",
+    "Comment la contrainte nourrit-elle votre créativité ?",
+    "Quel medium artistique aimeriez-vous explorer ?",
+    "Si vous pouviez créer n'importe quoi sans limite, que serait-ce ?",
+  ],
+  '✨ Gratitude': [
+    "Nommez 5 petites choses pour lesquelles vous êtes reconnaissante.",
+    "Écrivez un merci à quelqu'un qui ne le saura jamais.",
+    "Quel sens appréciez-vous le plus et pourquoi ?",
+    "Décrivez un échec qui s'est transformé en bénédiction.",
+    "Quelle partie de votre routine quotidienne est un cadeau ?",
+    "Remerciez votre corps pour tout ce qu'il fait.",
+    "Quel est le plus beau cadeau immatériel que vous ayez reçu ?",
+    "Imaginez votre vie sans une chose que vous tenez pour acquise.",
+    "Quelle qualité aimez-vous chez vous ?",
+    "Écrivez une gratitude pour un moment difficile.",
+    "Quel est le plus beau lever de soleil que vous ayez vu ?",
+    "Remerciez un objet du quotidien pour sa fidélité.",
+    "Quelle relation vous rend le plus reconnaissante ?",
+    "Quel repas récent avez-vous vraiment savouré ?",
+    "Décrivez le confort de votre lit.",
+    "Quel savoir ou talent êtes-vous heureuse de posséder ?",
+    "Comment la gratitude change-t-elle votre journée ?",
+    "Remerciez la version de vous-même d'il y a un an.",
+    "Quel moment de la semaine dernière mérite votre gratitude ?",
+    "Si vous ne pouviez garder que 3 choses, lesquelles ?",
+    "Quelle odeur vous rend heureuse ?",
+    "Remerciez quelqu'un dans votre passé qui a cru en vous.",
+    "Quel est le son le plus réconfortant pour vous ?",
+    "Décrivez un lieu que vous avez la chance de connaître.",
+    "Quelle liberté dont vous jouissez mérite votre reconnaissance ?",
+  ],
+  '📖 Journal': [
+    "Comment vous sentez-vous en ce moment, vraiment ?",
+    "Qu'est-ce qui vous a fait sourire aujourd'hui ?",
+    "Quel est le moment fort de votre journée ?",
+    "De quoi avez-vous besoin en ce moment ?",
+    "Si cette journée était un film, quel en serait le titre ?",
+    "Qu'avez-vous appris aujourd'hui ?",
+    "Quel défi avez-vous relevé ?",
+    "Comment avez-vous pris soin de vous ?",
+    "Qu'est-ce que vous reportez depuis trop longtemps ?",
+    "Quel est votre objectif pour demain ?",
+    "Quelle conversation a marqué votre journée ?",
+    "Comment avez-vous nourri votre esprit aujourd'hui ?",
+    "Qu'est-ce qui vous a surpris ?",
+    "Si vous pouviez revivre un moment de la journée, lequel ?",
+    "Comment vous êtes-vous sentie ce matin au réveil ?",
+    "Quelle est la chose la plus importante que vous avez faite aujourd'hui ?",
+    "Qu'aimeriez-vous laisser derrière vous ce soir ?",
+    "Quel petit bonheur avez-vous remarqué ?",
+    "Comment décririez-vous votre humeur en un mot ?",
+    "Que souhaitez-vous accomplir cette semaine ?",
+  ],
+  '🏡 Maison': [
+    "Décrivez votre espace de vie idéal.",
+    "Quel est votre coin préféré de votre maison ?",
+    "Comment votre intérieur reflète-t-il votre personnalité ?",
+    "Quel objet de votre maison a une histoire particulière ?",
+    "Comment créez-vous une atmosphère chaleureuse ?",
+    "Quel changement simple transformerait votre espace ?",
+    "Décrivez l'odeur de votre maison.",
+    "Comment le rangement influence-t-il votre état d'esprit ?",
+    "Quel est votre rituel du dimanche à la maison ?",
+    "Imaginez votre maison de rêve.",
+    "Quel meuble raconte une histoire ?",
+    "Comment intégrer plus de nature dans votre intérieur ?",
+    "Décrivez la lumière dans votre pièce préférée.",
+    "Qu'est-ce qui fait qu'un lieu devient un foyer ?",
+    "Quel est le son de votre maison ?",
+    "Comment accueillez-vous les invités chez vous ?",
+    "Quel plat résume l'âme de votre cuisine ?",
+    "Décrivez le jardin de vos rêves.",
+    "Comment la décoration nourrit-elle votre bien-être ?",
+    "Quelle pièce aimeriez-vous réinventer ?",
+  ],
+  '🌊 Nature': [
+    "Quel est votre endroit naturel préféré ?",
+    "Comment la nature influence-t-elle votre humeur ?",
+    "Décrivez un arbre que vous aimez.",
+    "Quel élément naturel vous représente le mieux ?",
+    "Comment la marche en nature transforme-t-elle vos pensées ?",
+    "Décrivez le dernier coucher de soleil que vous avez contemplé.",
+    "Quel animal sauvage vous fascine et pourquoi ?",
+    "Comment la pluie affecte-t-elle votre état intérieur ?",
+    "Décrivez l'odeur de la terre après la pluie.",
+    "Quel est votre souvenir le plus vivant en pleine nature ?",
+    "Comment vous sentez-vous face à l'océan ?",
+    "Décrivez la sensation du vent sur votre visage.",
+    "Quel jardin aimeriez-vous planter ?",
+    "Comment la nature vous enseigne-t-elle la patience ?",
+    "Quel paysage vous apaise instantanément ?",
+    "Décrivez le chant d'un oiseau que vous aimez.",
+    "Comment intégrer plus de nature dans votre quotidien ?",
+    "Quel est le cycle naturel qui vous inspire le plus ?",
+    "Décrivez la forêt avec vos cinq sens.",
+    "Que ressentez-vous quand vous marchez pieds nus dehors ?",
+  ],
+  '📚 Lecture': [
+    "Quel livre a changé votre vie ?",
+    "Décrivez votre endroit de lecture idéal.",
+    "Quel personnage de fiction vous ressemble le plus ?",
+    "Quel livre aimeriez-vous lire pour la première fois à nouveau ?",
+    "Comment la lecture nourrit-elle votre âme ?",
+    "Quel auteur aimeriez-vous rencontrer ?",
+    "Décrivez la sensation d'ouvrir un livre neuf.",
+    "Quel genre littéraire vous attire en ce moment ?",
+    "Quelle phrase de livre vous a marquée à jamais ?",
+    "Comment choisissez-vous votre prochaine lecture ?",
+    "Quel livre aimeriez-vous offrir à tout le monde ?",
+    "Décrivez votre bibliothèque idéale.",
+    "Quel livre vous a fait pleurer ?",
+    "Comment la lecture influence-t-elle votre écriture ?",
+    "Quel livre est sur votre table de nuit en ce moment ?",
+  ],
+  '✈️ Voyage': [
+    "Quel voyage a le plus transformé votre vision du monde ?",
+    "Décrivez un lieu que vous rêvez de visiter.",
+    "Quel est votre plus beau souvenir de voyage ?",
+    "Comment le voyage vous change-t-il ?",
+    "Décrivez un repas mémorable en voyage.",
+    "Quel est le plus beau paysage que vous ayez vu ?",
+    "Comment voyagez-vous intérieurement quand vous ne pouvez pas partir ?",
+    "Quelle culture vous inspire le plus ?",
+    "Décrivez l'excitation de la veille d'un départ.",
+    "Quel objet ramenez-vous toujours de voyage ?",
+    "Quel est le prochain voyage que vous planifiez ?",
+    "Comment le voyage nourrit-il votre créativité ?",
+    "Décrivez une rencontre marquante en voyage.",
+    "Quel est votre mode de transport préféré et pourquoi ?",
+    "Si vous pouviez vivre un an n'importe où, où iriez-vous ?",
+  ],
+};
+
+const PROMPT_CATS = Object.keys(PROMPTS);
+
+function initPrompts(){
+  document.getElementById('prompt-cats').innerHTML=PROMPT_CATS.map(c=>`<button class="p-cat" onclick="selPromptCat('${c}')">${c}</button>`).join('');
+}
+function selPromptCat(c){currentPromptCat=c;document.querySelectorAll('.p-cat').forEach(b=>b.classList.toggle('active',b.textContent===c));generatePrompt();}
+function generatePrompt(){
+  if(!currentPromptCat)return;
+  const el=document.getElementById('prompt-display');
+  el.classList.add('flipping');
+  setTimeout(()=>{
+    const list=PROMPTS[currentPromptCat];
+    currentPrompt=list[Math.floor(Math.random()*list.length)];
+    el.textContent=currentPrompt;
+    el.classList.remove('flipping');
+  },250);
+}
+function usePrompt(){if(!currentPrompt)return;closeOverlay('prompt-overlay');goToApp();setTimeout(()=>{const i=document.getElementById('note-input');i.value=currentPrompt+'\n\n';i.focus();autoGrow(i);toggleSend();},300);}
+function openPromptGen(){document.getElementById('prompt-overlay').classList.add('open');}
+
+// ═══════════════════════════════════════
+// WHEEL
+// ═══════════════════════════════════════
+const WHEEL_COLORS = ['#C2703E','#E8A87C','#6B8F71','#9DB8A0','#C77D8E','#DDA3B0','#C4956A','#7BA4C4','#B8B060','#D4845E','#8E7CC3','#CC7878','#6BAED6','#E6B566','#8FBC8F'];
+
+function drawWheel(){
+  const svg=document.getElementById('wheel-svg');
+  const cats=PROMPT_CATS;const n=cats.length;const cx=130,cy=130,r=120;
+  let html='';
+  for(let i=0;i<n;i++){
+    const a1=(2*Math.PI/n)*i - Math.PI/2;
+    const a2=(2*Math.PI/n)*(i+1) - Math.PI/2;
+    const x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+    const x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
+    const la=((a2-a1)>Math.PI)?1:0;
+    const color=WHEEL_COLORS[i%WHEEL_COLORS.length];
+    html+=`<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${la},1 ${x2},${y2} Z" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
+    const amid=(a1+a2)/2;
+    const tx=cx+(r*0.6)*Math.cos(amid),ty=cy+(r*0.6)*Math.sin(amid);
+    const emoji=cats[i].split(' ')[0];
+    html+=`<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="central" font-size="16">${emoji}</text>`;
+  }
+  svg.innerHTML=html;
+}
+
+let wheelSpinning=false;
+function spinWheel(){
+  if(wheelSpinning)return;wheelSpinning=true;
+  const svg=document.getElementById('wheel-svg');
+  const n=PROMPT_CATS.length;
+  const extraTurns=3+Math.floor(Math.random()*3);
+  const stopAngle=Math.random()*360;
+  const totalDeg=extraTurns*360+stopAngle;
+  svg.style.transition='none';svg.style.transform='rotate(0deg)';
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+    svg.style.transition='transform 3.5s cubic-bezier(.17,.67,.12,.99)';
+    svg.style.transform=`rotate(${totalDeg}deg)`;
+  });});
+  setTimeout(()=>{
+    const norm=(360-stopAngle%360)%360;
+    const segDeg=360/n;
+    const idx=Math.floor(norm/segDeg)%n;
+    const cat=PROMPT_CATS[idx];
+    const list=PROMPTS[cat];
+    wheelPrompt=list[Math.floor(Math.random()*list.length)];
+    document.getElementById('wheel-result').innerHTML=`<span>${cat}</span>`;
+    setTimeout(()=>{document.getElementById('wheel-result').innerHTML=`<span style="font-style:italic;font-size:15px;line-height:1.6;">${wheelPrompt}</span>`;document.getElementById('wheel-use-btn').style.display='';},600);
+    wheelSpinning=false;
+  },3600);
+}
+function useWheelPrompt(){if(!wheelPrompt)return;closeOverlay('wheel-overlay');goToApp();setTimeout(()=>{const i=document.getElementById('note-input');i.value=wheelPrompt+'\n\n';i.focus();autoGrow(i);toggleSend();},300);}
+function openWheel(){document.getElementById('wheel-overlay').classList.add('open');document.getElementById('wheel-result').innerHTML='';document.getElementById('wheel-use-btn').style.display='none';}
+
+// ═══════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════
+function openCalendar(){
+  const now=new Date();calMonth=now.getMonth();calYear=now.getFullYear();
+  renderCal();document.getElementById('calendar-overlay').classList.add('open');
+}
+function calNav(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();}
+
+function renderCal(){
+  const months=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  document.getElementById('cal-title').textContent=months[calMonth]+' '+calYear;
+  const grid=document.getElementById('cal-grid');
+  const days=['L','M','M','J','V','S','D'];
+  let html=days.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
+  const first=new Date(calYear,calMonth,1);
+  let startDay=(first.getDay()+6)%7;
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();const todayStr2=today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2,'0')+'-'+today.getDate().toString().padStart(2,'0');
+
+  for(let i=0;i<startDay;i++) html+='<div class="cal-day"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=calYear+'-'+(calMonth+1).toString().padStart(2,'0')+'-'+d.toString().padStart(2,'0');
+    const notesOnDay=D.notes.filter(n=>dateStr(n.ts)===ds);
+    const mood=D.moods[ds];
+    const isToday=ds===todayStr2;
+    let leaf='';
+    if(notesOnDay.length>=3) leaf='🌳';
+    else if(notesOnDay.length===2) leaf='🌿';
+    else if(notesOnDay.length===1) leaf='🍃';
+    else leaf='<span style="color:var(--text3);font-size:11px;">·</span>';
+    html+=`<div class="cal-day ${notesOnDay.length?'has-notes':''} ${isToday?'today':''}" title="${d}/${calMonth+1} — ${notesOnDay.length} note(s)${mood?' — '+moodEmoji(mood):''}">
+      ${leaf}<span class="day-num">${d}</span></div>`;
+  }
+  grid.innerHTML=html;
+
+  // Stats
+  const monthNotes=D.notes.filter(n=>{const d=new Date(n.ts);return d.getMonth()===calMonth&&d.getFullYear()===calYear;});
+  const activeDays=new Set(monthNotes.map(n=>dateStr(n.ts))).size;
+  document.getElementById('cal-stats').innerHTML=monthNotes.length?
+    `Tu as confié <b>${monthNotes.length}</b> pensée${monthNotes.length>1?'s':''} ce mois-ci.<br>Tu as pris soin de toi pendant <b>${activeDays}</b> jour${activeDays>1?'s':''}.`
+    :'<i>Aucune note ce mois-ci.</i>';
+}
+
+// ═══════════════════════════════════════
+// AI INSIGHTS
+// ═══════════════════════════════════════
+function openInsights(){
+  const el=document.getElementById('insights-content');
+  const thirtyDaysAgo=Date.now()-30*24*60*60*1000;
+  const recent=D.notes.filter(n=>n.ts>thirtyDaysAgo);
+  if(recent.length<3){el.innerHTML='<div class="insight-card"><div class="insight-icon">🌱</div>Continue d\'écrire… Les observations apparaîtront après quelques notes.</div>';document.getElementById('insights-overlay').classList.add('open');return;}
+
+  const allText=recent.map(n=>n.text.toLowerCase()).join(' ');
+  const insights=[];
+
+  // Word frequency
+  const words=allText.split(/\s+/).filter(w=>w.length>4);
+  const freq={};words.forEach(w=>{const clean=w.replace(/[^a-zà-ɏé]/g,'');if(clean.length>4)freq[clean]=(freq[clean]||0)+1;});
+  const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  if(sorted.length>=3){
+    insights.push({icon:'💬',text:`Les mots « ${sorted[0][0]} », « ${sorted[1][0]} » et « ${sorted[2][0]} » reviennent souvent dans tes écrits ce mois-ci.`});
+  }
+
+  // Most used tags
+  const tagFreq={};recent.forEach(n=>n.tags.forEach(t=>{tagFreq[t]=(tagFreq[t]||0)+1;}));
+  const topTags=Object.entries(tagFreq).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  if(topTags.length>=2){
+    const names=topTags.map(([id])=>{const t=tagObj(id);return t?t.emoji+' '+t.name:'#'+id;});
+    insights.push({icon:'🏷',text:`Tu as beaucoup écrit dans ${names.join(', ')} récemment.`});
+  }
+
+  // Writing rhythm
+  const daySet=new Set(recent.map(n=>dateStr(n.ts)));
+  const streak=daySet.size;
+  if(streak>=5) insights.push({icon:'🔥',text:`Tu as écrit ${streak} jours ce mois-ci. Une belle constance !`});
+  else if(streak>=2) insights.push({icon:'🌿',text:`Tu as pris le temps d'écrire ${streak} jours ce mois-ci. Chaque jour compte.`});
+
+  // Mood analysis
+  const moodCounts={};Object.entries(D.moods).forEach(([ds,m])=>{if(new Date(ds)>new Date(thirtyDaysAgo))moodCounts[m]=(moodCounts[m]||0)+1;});
+  const topMood=Object.entries(moodCounts).sort((a,b)=>b[1]-a[1])[0];
+  if(topMood){const mo=MOODS.find(x=>x.key===topMood[0]);if(mo)insights.push({icon:mo.emoji,text:`Ton humeur dominante ce mois-ci : ${mo.label}. ${topMood[0]==='calme'?'Une belle sérénité se dessine.':topMood[0]==='inspiree'?'L\'inspiration te porte !':topMood[0]==='fatiguee'?'Prends le temps de te reposer.':'Continue d\'observer tes émotions.'}`});}
+
+  if(!insights.length) insights.push({icon:'✨',text:'Continue d\'écrire, tes tendances se révéleront bientôt.'});
+  el.innerHTML=insights.map(i=>`<div class="insight-card"><div class="insight-icon">${i.icon}</div>${i.text}</div>`).join('');
+  document.getElementById('insights-overlay').classList.add('open');
+}
+
+// ═══════════════════════════════════════
+// COLLECTIONS
+// ═══════════════════════════════════════
+function openCollections(){
+  renderCollections();
+  document.getElementById('collections-overlay').classList.add('open');
+}
+function renderCollections(){
+  const el=document.getElementById('collections-list');
+  if(!D.collections.length){el.innerHTML='<p style="color:var(--text3);text-align:center;padding:20px;">Aucune collection encore. Crée-en une pour rassembler tes plus belles notes.</p>';return;}
+  el.innerHTML=D.collections.map((c,i)=>`<div class="collection-item" onclick="exportCollection(${i})">
+    <div class="coll-info"><span class="coll-icon">${c.emoji||'📚'}</span><span class="coll-name serif">${c.name}</span></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="coll-count">${c.noteIds.length} note${c.noteIds.length>1?'s':''}</span>
+      <button class="tag-act" onclick="event.stopPropagation();deleteCollection(${i})" title="Supprimer">✕</button>
+    </div></div>`).join('');
+}
+
+function createCollection(){
+  document.getElementById('modal-title').textContent='Nouvelle collection';
+  document.getElementById('modal-input').value='';
+  document.getElementById('modal-input').placeholder='Nom de la collection…';
+  document.getElementById('modal-extra').innerHTML=`<input id="modal-emoji" placeholder="Emoji (ex: 🌸)" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;outline:none;background:var(--bg);margin-bottom:12px;font-family:DM Sans;" />
+    <p style="font-size:13px;color:var(--text2);margin-bottom:8px;">Sélectionne un univers pour ajouter ses notes :</p>
+    <select id="modal-tag-select" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg);margin-bottom:12px;font-family:DM Sans;color:var(--text);">
+      <option value="">Toutes les notes</option>
+      ${D.tags.map(t=>`<option value="${t.id}">${t.emoji} ${t.name}</option>`).join('')}
+    </select>`;
+  document.getElementById('modal-confirm').onclick=()=>{
+    const name=document.getElementById('modal-input').value.trim();
+    const emoji=document.getElementById('modal-emoji').value.trim()||'📚';
+    const tagId=document.getElementById('modal-tag-select').value;
+    if(!name){closeModal();return;}
+    const noteIds=tagId?D.notes.filter(n=>n.tags.includes(tagId)).map(n=>n.id):D.notes.map(n=>n.id);
+    D.collections.push({name,emoji,noteIds});save();renderCollections();closeModal();
+  };
+  closeOverlay('collections-overlay');openModal();
+}
+function deleteCollection(i){if(!confirm('Supprimer cette collection ?'))return;D.collections.splice(i,1);save();renderCollections();}
+
+function exportCollection(i){
+  const c=D.collections[i];
+  const notes=c.noteIds.map(id=>D.notes.find(n=>n.id===id)).filter(Boolean).sort((a,b)=>a.ts-b.ts);
+  if(!notes.length){alert('Aucune note dans cette collection.');return;}
+
+  const container=document.createElement('div');
+  container.style.fontFamily="'DM Sans', sans-serif";
+  container.style.color="#3A3A3A";
+  container.innerHTML=`
+    <div style="text-align:center;padding:60px 20px 40px;page-break-after:always;">
+      <div style="font-size:64px;margin-bottom:24px;">${c.emoji}</div>
+      <div style="font-family:Cormorant Garamond,serif;font-size:36px;color:#C2703E;font-style:italic;margin-bottom:8px;">${esc(c.name)}</div>
+      <div style="color:#8A8580;font-size:14px;margin-bottom:32px;">${notes.length} pensées rassemblées</div>
+      <div style="width:60px;height:2px;background:#C2703E;margin:0 auto 24px;"></div>
+      <div style="font-style:italic;color:#8A8580;font-size:13px;">Inspirée — Le refuge de tes pensées</div>
+    </div>
+    ${notes.map((n,j)=>`
+      <div style="padding:20px 0;border-bottom:1px solid #EDE8E3;page-break-inside:avoid;">
+        <div style="font-size:11px;color:#8A8580;margin-bottom:8px;">${formatDate(n.ts)} ${n.tags.map(tid=>{const to=tagObj(tid);return to?to.emoji+' '+to.name:'#'+tid;}).join(' · ')}</div>
+        <div style="font-size:14px;line-height:1.8;white-space:pre-wrap;">${esc(n.text)}</div>
+      </div>`).join('')}
+    <div style="text-align:center;padding:40px 20px;color:#8A8580;font-size:12px;">
+      Exporté depuis Inspirée — ${new Date().toLocaleDateString('fr-FR')}
+    </div>`;
+
+  html2pdf().set({margin:[15,15,15,15],filename:`${c.name.replace(/\s+/g,'_')}.pdf`,html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4'}}).from(container).save();
+}
+
+// ═══════════════════════════════════════
+// PDF EXPORT
+// ═══════════════════════════════════════
+function exportPDF(){
+  const notes=getFilteredNotes();
+  if(!notes.length){alert('Aucune note à exporter.');return;}
+  const t=activeTag?tagObj(activeTag):null;
+  const title=t?`${t.emoji} ${t.name}`:'Toutes les notes';
+
+  const container=document.createElement('div');
+  container.style.fontFamily="'DM Sans', sans-serif";container.style.color="#3A3A3A";
+  container.innerHTML=`
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="font-family:Cormorant Garamond,serif;font-size:32px;color:#C2703E;font-style:italic;">Inspirée</div>
+      <div style="color:#8A8580;font-size:13px;margin-top:4px;">${title} — ${new Date().toLocaleDateString('fr-FR')}</div>
+      <div style="width:40px;height:2px;background:#C2703E;margin:16px auto 0;"></div>
+    </div>
+    ${notes.map(n=>`
+      <div style="margin-bottom:16px;padding:16px;border:1px solid #EDE8E3;border-radius:10px;page-break-inside:avoid;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="font-size:11px;color:#8A8580;">${formatDate(n.ts)}</span>
+          <span style="font-size:11px;color:#C2703E;">${n.tags.map(tid=>{const to=tagObj(tid);return to?to.emoji+' '+to.name:'#'+tid;}).join(' · ')}</span>
+        </div>
+        <div style="font-size:14px;line-height:1.8;white-space:pre-wrap;">${esc(n.text)}</div>
+      </div>`).join('')}`;
+  html2pdf().set({margin:[12,12,12,12],filename:`inspiree_${t?t.name:'tout'}_${new Date().toISOString().slice(0,10)}.pdf`,html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4'}}).from(container).save();
+}
+
+// ═══════════════════════════════════════
+// THEMES
+// ═══════════════════════════════════════
+const THEMES=[
+  {id:'lin',name:'Lin',emoji:'🤍',swatch:'#FAF8F5'},
+  {id:'sauge',name:'Sauge',emoji:'🌿',swatch:'#6B8F71'},
+  {id:'sable',name:'Sable',emoji:'☀️',swatch:'#C4956A'},
+  {id:'nuit',name:'Nuit',emoji:'🌙',swatch:'#1A1B2E'},
+  {id:'automne',name:'Automne',emoji:'🍂',swatch:'#B85C38'},
+  {id:'fleur',name:'Fleur de coton',emoji:'🌸',swatch:'#C77D8E'},
+];
+
+function renderThemes(){
+  document.getElementById('themes-grid').innerHTML=THEMES.map(t=>`<div class="theme-choice ${D.theme===t.id?'active':''}" onclick="setTheme('${t.id}')">
+    <div class="swatch" style="background:${t.swatch};${t.id==='lin'?'border:1px solid #EDE8E3;':''}"></div>
+    <div class="name">${t.emoji} ${t.name}</div></div>`).join('');
+}
+function setTheme(id){D.theme=id;document.body.setAttribute('data-theme',id);save();renderThemes();}
+
+// ═══════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════
+function openSettings(){renderThemes();document.getElementById('settings-overlay').classList.add('open');}
+function changePin(){closeOverlay('settings-overlay');D.pin=null;save();document.getElementById('pin-screen').classList.remove('hidden');document.getElementById('app').classList.remove('active');document.getElementById('home-screen').classList.remove('active');initPin();}
+function changeName(){
+  document.getElementById('modal-title').textContent='Votre prénom';
+  document.getElementById('modal-input').value=D.name;document.getElementById('modal-input').placeholder='Prénom…';
+  document.getElementById('modal-extra').innerHTML='';
+  document.getElementById('modal-confirm').onclick=()=>{const v=document.getElementById('modal-input').value.trim();if(v){D.name=v;save();}closeModal();};
+  closeOverlay('settings-overlay');openModal();
+}
+function exportAllData(){const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`inspiree_${new Date().toISOString().slice(0,10)}.json`;a.click();}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const imp=JSON.parse(ev.target.result);if(confirm(`Importer ${(imp.notes||[]).length} notes ? Cela remplacera vos données.`)){D={...D,...imp};save();location.reload();}}catch(err){alert('Fichier invalide.');}};r.readAsText(f);}
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function formatDate(ts){const d=new Date(ts);return d.toLocaleDateString('fr-FR',{day:'numeric',month:'long'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+function dateStr(ts){const d=new Date(ts);return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function renderText(s){return esc(s).replace(/#([\wÀ-ɏé]+)/g,'<span style="color:var(--terra);font-weight:500">#$1</span>');}
+function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
+function toggleSend(){document.getElementById('send-btn').disabled=!document.getElementById('note-input').value.trim()&&!pendingImages.length;}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sb-overlay').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('open');}
+document.getElementById('sb-overlay').addEventListener('click',closeSidebar);
+
+function openModal(){document.getElementById('modal').classList.add('open');setTimeout(()=>document.getElementById('modal-input').focus(),100);}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.getElementById('modal-extra').innerHTML='';}
+function closeOverlay(id){document.getElementById(id).classList.remove('open');}
+
+// Enter to send
+document.getElementById('note-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();addNote();}});
+
+// ═══════════════════════════════════════
+// LOCK
+// ═══════════════════════════════════════
+function lockApp(){
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('home-screen').classList.remove('active');
+  document.getElementById('welcome-screen').classList.remove('active');
+  document.getElementById('pin-screen').classList.remove('hidden');
+  document.getElementById('lock-btn').style.display='none';
+  pinStep='check';pinBuf='';
+  document.getElementById('pin-title').textContent='Entrez votre code PIN';
+  document.getElementById('pin-msg').textContent='';
+  renderDots();
+}
+
+// Show lock button when app is visible
+const origUnlock=unlock;
+unlock=function(){
+  origUnlock();
+  document.getElementById('lock-btn').style.display='flex';
+};
+
+// ═══════════════════════════════════════
+// GOOGLE DRIVE SYNC
+// ═══════════════════════════════════════
+const GDRIVE_FILE_NAME='inspiree_sync.json';
+const GDRIVE_SCOPES='https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';
+let gdriveReady=false;
+let gdriveToken=null;
+let gdriveSyncInterval=null;
+let gdriveFileId=null;
+
+// ── Google API init ──
+function initGoogleDrive(){
+  // Check if we have a stored token
+  const stored=localStorage.getItem('inspiree_gdrive_token');
+  const expiry=localStorage.getItem('inspiree_gdrive_expiry');
+  if(stored && expiry && Date.now()<parseInt(expiry)){
+    gdriveToken=stored;
+    gdriveReady=true;
+    updateSyncBar('connected');
+    startAutoSync();
+  }
+}
+
+function handleSyncClick(){
+  if(gdriveReady){
+    // Already connected — manual sync
+    syncToGDrive();
+  } else {
+    // Start OAuth
+    connectGoogleDrive();
+  }
+}
+
+function connectGoogleDrive(){
+  // Check if GIS is loaded
+  if(typeof google==='undefined'||!google.accounts){
+    // GIS not loaded — show setup instructions
+    showDriveSetupGuide();
+    return;
+  }
+
+  const client=google.accounts.oauth2.initTokenClient({
+    client_id:D.gdriveClientId||'',
+    scope:GDRIVE_SCOPES,
+    callback:(response)=>{
+      if(response.error){
+        console.error('OAuth error:',response);
+        updateSyncBar('error');
+        return;
+      }
+      gdriveToken=response.access_token;
+      gdriveReady=true;
+      // Store token with expiry
+      localStorage.setItem('inspiree_gdrive_token',gdriveToken);
+      localStorage.setItem('inspiree_gdrive_expiry',Date.now()+(response.expires_in*1000));
+      updateSyncBar('connected');
+      syncToGDrive();
+      startAutoSync();
+    }
+  });
+
+  if(!D.gdriveClientId){
+    showDriveSetupGuide();
+    return;
+  }
+  client.requestAccessToken();
+}
+
+function showDriveSetupGuide(){
+  document.getElementById('modal-title').textContent='☁️ Configurer Google Drive';
+  document.getElementById('modal-input').value=D.gdriveClientId||'';
+  document.getElementById('modal-input').placeholder='Client ID Google…';
+  document.getElementById('modal-extra').innerHTML=`
+    <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px;padding:12px;background:var(--bg);border-radius:10px;">
+      <b>Comment obtenir votre Client ID :</b><br>
+      1. Allez sur <a href="https://console.cloud.google.com" target="_blank" style="color:var(--terra)">console.cloud.google.com</a><br>
+      2. Créez un projet (ex: "Inspirée")<br>
+      3. Activez l'API Google Drive<br>
+      4. Allez dans Identifiants → Créer → ID client OAuth 2.0<br>
+      5. Type : Application Web<br>
+      6. Origines JS autorisées : ajoutez l'URL où vous hébergez ce fichier<br>
+      7. Copiez le Client ID ici<br><br>
+      <b>Alternative sans API :</b> Utilisez le bouton Exporter (JSON) dans les réglages et sauvegardez le fichier manuellement sur Google Drive.
+    </div>`;
+  document.getElementById('modal-confirm').onclick=()=>{
+    const id=document.getElementById('modal-input').value.trim();
+    if(id){
+      D.gdriveClientId=id;
+      save();
+      closeModal();
+      connectGoogleDrive();
+    } else {
+      closeModal();
+    }
+  };
+  openModal();
+}
+
+async function syncToGDrive(){
+  if(!gdriveReady||!gdriveToken)return;
+  updateSyncBar('syncing');
+
+  try{
+    // 1. Find existing file
+    if(!gdriveFileId){
+      const searchRes=await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${GDRIVE_FILE_NAME}' and trashed=false&spaces=drive&fields=files(id,modifiedTime)`,{
+        headers:{'Authorization':'Bearer '+gdriveToken}
+      });
+      if(!searchRes.ok) throw new Error('Search failed');
+      const searchData=await searchRes.json();
+      if(searchData.files&&searchData.files.length>0){
+        gdriveFileId=searchData.files[0].id;
+      }
+    }
+
+    const content=JSON.stringify(D);
+    const metadata={name:GDRIVE_FILE_NAME,mimeType:'application/json'};
+
+    if(gdriveFileId){
+      // Update existing file
+      const form=new FormData();
+      form.append('metadata',new Blob([JSON.stringify(metadata)],{type:'application/json'}));
+      form.append('file',new Blob([content],{type:'application/json'}));
+
+      const res=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gdriveFileId}?uploadType=multipart`,{
+        method:'PATCH',
+        headers:{'Authorization':'Bearer '+gdriveToken},
+        body:form
+      });
+      if(!res.ok) throw new Error('Update failed');
+    } else {
+      // Create new file
+      const form=new FormData();
+      form.append('metadata',new Blob([JSON.stringify(metadata)],{type:'application/json'}));
+      form.append('file',new Blob([content],{type:'application/json'}));
+
+      const res=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{
+        method:'POST',
+        headers:{'Authorization':'Bearer '+gdriveToken},
+        body:form
+      });
+      if(!res.ok) throw new Error('Create failed');
+      const data=await res.json();
+      gdriveFileId=data.id;
+    }
+
+    D.lastSync=Date.now();save();
+    updateSyncBar('synced');
+  } catch(err){
+    console.error('Sync error:',err);
+    // Token might be expired
+    if(err.message.includes('401')||err.message.includes('403')){
+      gdriveReady=false;gdriveToken=null;
+      localStorage.removeItem('inspiree_gdrive_token');
+      localStorage.removeItem('inspiree_gdrive_expiry');
+      updateSyncBar('disconnected');
+    } else {
+      updateSyncBar('error');
+    }
+  }
+}
+
+async function syncFromGDrive(){
+  if(!gdriveReady||!gdriveToken||!gdriveFileId)return;
+
+  try{
+    const res=await fetch(`https://www.googleapis.com/drive/v3/files/${gdriveFileId}?alt=media`,{
+      headers:{'Authorization':'Bearer '+gdriveToken}
+    });
+    if(!res.ok)return;
+    const remote=await res.json();
+    // Merge: if remote has newer notes, use remote
+    if(remote.notes&&remote.lastSync&&(!D.lastSync||remote.lastSync>D.lastSync)){
+      if(confirm('Des données plus récentes existent sur Google Drive. Les importer ?')){
+        const pin=D.pin; // Keep local PIN
+        D={...D,...remote,pin};
+        save();renderTags();renderNotes();
+      }
+    }
+  }catch(e){console.error('Download error:',e);}
+}
+
+function startAutoSync(){
+  if(gdriveSyncInterval)clearInterval(gdriveSyncInterval);
+  // Auto-sync every 2 minutes
+  gdriveSyncInterval=setInterval(()=>{
+    if(gdriveReady)syncToGDrive();
+  },2*60*1000);
+}
+
+function updateSyncBar(state){
+  const bar=document.getElementById('sync-bar');
+  const text=document.getElementById('sync-text');
+  const settingsBtn=document.getElementById('gdrive-settings-btn');
+  bar.className='sync-bar';
+  switch(state){
+    case 'connected':
+      text.textContent='☁ Google Drive connecté';
+      bar.classList.add('synced');
+      if(settingsBtn)settingsBtn.innerHTML='✅ Google Drive connecté';
+      break;
+    case 'syncing':
+      text.textContent='☁ Synchronisation…';
+      bar.classList.add('syncing');
+      break;
+    case 'synced':
+      text.textContent='☁ Synchronisé — '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      bar.classList.add('synced');
+      break;
+    case 'error':
+      text.textContent='⚠ Erreur de synchronisation — cliquez pour réessayer';
+      break;
+    case 'disconnected':
+    default:
+      text.textContent='☁ Connecter Google Drive';
+      if(settingsBtn)settingsBtn.innerHTML='☁️ Connecter Google Drive';
+  }
+}
+
+// Auto-save triggers sync
+const origSave=save;
+save=function(){
+  origSave();
+  // Debounced sync to Drive
+  if(gdriveReady){
+    clearTimeout(save._timer);
+    save._timer=setTimeout(()=>syncToGDrive(),5000);
+  }
+};
+
+// ═══════════════════════════════════════
+// PWA — SERVICE WORKER & INSTALL
+// ═══════════════════════════════════════
+let deferredInstallPrompt=null;
+
+// Register service worker (inline blob)
+if('serviceWorker' in navigator){
+  const swCode=`
+    const CACHE='inspiree-v2';
+    const ASSETS=[self.location.href];
+    self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));});
+    self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
+    self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{if(res.ok){const clone=res.clone();caches.open(CACHE).then(c=>c.put(e.request,clone));}return res;}).catch(()=>caches.match(e.request))));});
+  `;
+  const swBlob=new Blob([swCode],{type:'application/javascript'});
+  const swURL=URL.createObjectURL(swBlob);
+  navigator.serviceWorker.register(swURL,{scope:'/'}).catch(()=>{});
+}
+
+// Manifest (inline data URI)
+const manifest={
+  name:'Inspirée',
+  short_name:'Inspirée',
+  description:'Le refuge de tes pensées',
+  start_url:location.href,
+  display:'standalone',
+  background_color:'#FAF8F5',
+  theme_color:'#C2703E',
+  icons:[{src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23FAF8F5" width="100" height="100" rx="20"/><text x="50" y="62" text-anchor="middle" font-size="50">🌿</text></svg>',sizes:'any',type:'image/svg+xml'}]
+};
+const manifestBlob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+const manifestLink=document.createElement('link');
+manifestLink.rel='manifest';
+manifestLink.href=URL.createObjectURL(manifestBlob);
+document.head.appendChild(manifestLink);
+
+// Install prompt
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  // Show install banner after 10 seconds
+  setTimeout(()=>{
+    if(deferredInstallPrompt&&!localStorage.getItem('inspiree_install_dismissed')){
+      document.getElementById('install-banner').classList.add('show');
+    }
+  },10000);
+});
+
+function installPWA(){
+  if(!deferredInstallPrompt)return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(r=>{
+    document.getElementById('install-banner').classList.remove('show');
+    deferredInstallPrompt=null;
+  });
+}
+function dismissInstall(){
+  document.getElementById('install-banner').classList.remove('show');
+  localStorage.setItem('inspiree_install_dismissed','1');
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+load();
+initPin();
+initPrompts();
+drawWheel();
+initGoogleDrive();
+
+// Check for Drive sync on load
+setTimeout(()=>{if(gdriveReady)syncFromGDrive();},2000);
+</script>
+</body>
+</html>
