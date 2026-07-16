@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23FAF8F5' width='100' height='100' rx='20'/><text x='50' y='62' text-anchor='middle' font-size='50'>🌿</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
 /* ══════════════ THEMES ══════════════ */
 :root, [data-theme="lin"] {
@@ -43,6 +43,21 @@
   --bg: #FDF6F8; --bg2: #F8ECF0; --card: #FFFAFC; --terra: #C77D8E; --terra-light: #DDA3B0;
   --terra-pale: #F5E2E8; --text: #3E2D33; --text2: #9A8088; --text3: #BCA8AE;
   --border: #EEDDE2; --shadow: rgba(0,0,0,0.05); --glow: rgba(199,125,142,0.15);
+}
+[data-theme="marron"] {
+  --bg: #FAF6F2; --bg2: #F0E8DF; --card: #FFFCF8; --terra: #7B5B3A; --terra-light: #A68560;
+  --terra-pale: #EDE0D2; --text: #3C2F22; --text2: #8A7768; --text3: #B5A594;
+  --border: #DDD1C3; --shadow: rgba(0,0,0,0.06); --glow: rgba(123,91,58,0.15);
+}
+[data-theme="bleu"] {
+  --bg: #F4F7FB; --bg2: #E8EEF6; --card: #FAFCFF; --terra: #4A7FB5; --terra-light: #7BAAD4;
+  --terra-pale: #DCE8F4; --text: #2A3544; --text2: #7888A0; --text3: #A4B1C2;
+  --border: #D0DBE8; --shadow: rgba(0,0,0,0.05); --glow: rgba(74,127,181,0.15);
+}
+[data-theme="gris"] {
+  --bg: #F5F5F5; --bg2: #EBEBEB; --card: #FAFAFA; --terra: #7A7A7A; --terra-light: #A3A3A3;
+  --terra-pale: #E5E5E5; --text: #333333; --text2: #888888; --text3: #AAAAAA;
+  --border: #DDDDDD; --shadow: rgba(0,0,0,0.05); --glow: rgba(122,122,122,0.12);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -234,7 +249,7 @@ body {
 .note-mood { font-size:14px; }
 .note-tags-row { display:flex; gap:6px; flex-wrap:wrap; }
 .note-tag { font-size:11px; color:var(--terra); background:var(--terra-pale); padding:3px 10px; border-radius:8px; }
-.note-body { font-size:15px; line-height:1.8; white-space:pre-wrap; word-break:break-word; }
+.note-body { font-family:var(--note-font, 'Cormorant Garamond', serif); font-size:var(--note-size, 15px); line-height:var(--note-lh, 1.8); white-space:pre-wrap; word-break:break-word; }
 .note-images { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
 .note-img { width:120px; height:120px; object-fit:cover; border-radius:10px; cursor:pointer; transition:.2s; border:1px solid var(--border); }
 .note-img:hover { transform:scale(1.05); box-shadow:0 4px 16px var(--shadow); }
@@ -251,8 +266,8 @@ body {
 }
 .composer-box:focus-within { border-color:var(--terra); box-shadow:0 0 0 3px var(--glow); }
 .composer-box textarea {
-  width:100%; border:none; background:transparent; font-family:'Cormorant Garamond', serif;
-  font-size:17px; color:var(--text); resize:none; outline:none; min-height:28px; max-height:200px; line-height:1.7;
+  width:100%; border:none; background:transparent; font-family:var(--note-font, 'Cormorant Garamond', serif);
+  font-size:var(--note-size, 17px); color:var(--text); resize:none; outline:none; min-height:28px; max-height:200px; line-height:var(--note-lh, 1.7);
 }
 .composer-box textarea::placeholder { color:var(--text3); font-style:italic; }
 .composer-toolbar { display:flex; align-items:center; justify-content:space-between; }
@@ -396,7 +411,7 @@ body {
 /* ══════════════ EDIT TEXTAREA ══════════════ */
 .note-edit-area {
   width:100%; border:1.5px solid var(--terra); border-radius:10px;
-  padding:14px; font-family:'Cormorant Garamond', serif; font-size:16px; line-height:1.7;
+  padding:14px; font-family:var(--note-font, 'Cormorant Garamond', serif); font-size:var(--note-size, 16px); line-height:var(--note-lh, 1.7);
   background:var(--bg); resize:vertical; min-height:60px; outline:none; color:var(--text);
 }
 
@@ -434,6 +449,86 @@ body {
 .install-banner.show { display:block; }
 .install-banner p { font-size:14px; margin-bottom:12px; color:var(--text); }
 .install-banner .install-actions { display:flex; gap:8px; justify-content:center; }
+
+/* ══════════════ REGISTRATION ══════════════ */
+#register-screen {
+  position:fixed; inset:0; z-index:9998; background:var(--bg);
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  gap:16px; padding:40px 24px; text-align:center;
+}
+#register-screen.active { display:flex; }
+.reg-form { width:100%; max-width:320px; display:flex; flex-direction:column; gap:12px; }
+.reg-form input {
+  width:100%; padding:14px 16px; border:1.5px solid var(--border); border-radius:12px;
+  background:var(--card); font-family:'DM Sans'; font-size:15px; color:var(--text); outline:none; transition:.2s;
+}
+.reg-form input:focus { border-color:var(--terra); box-shadow:0 0 0 3px var(--glow); }
+.reg-form input::placeholder { color:var(--text3); }
+.reg-submit {
+  padding:14px; border-radius:12px; border:none; background:var(--terra); color:#fff;
+  font-family:'DM Sans'; font-size:15px; cursor:pointer; transition:.2s;
+  box-shadow:0 4px 16px var(--glow);
+}
+.reg-submit:hover { filter:brightness(.9); transform:translateY(-1px); }
+.reg-submit:disabled { background:var(--border); cursor:default; transform:none; box-shadow:none; }
+.reg-link { color:var(--terra); font-size:13px; cursor:pointer; background:none; border:none; font-family:'DM Sans'; text-decoration:underline; }
+.reg-link:hover { filter:brightness(.8); }
+.reg-error { color:#D9534F; font-size:13px; min-height:18px; }
+
+/* ══════════════ PIN RECOVERY ══════════════ */
+#recovery-screen {
+  position:fixed; inset:0; z-index:9997; background:var(--bg);
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  gap:16px; padding:40px 24px; text-align:center;
+}
+#recovery-screen.active { display:flex; }
+
+/* ══════════════ VISION BOARD ══════════════ */
+.vb-panel { background:var(--card); border-radius:20px; padding:32px; max-width:600px; width:92%; max-height:85vh; overflow-y:auto; box-shadow:0 24px 80px rgba(0,0,0,.18); position:relative; }
+.vb-grid { display:grid; grid-template-columns:1fr; gap:10px; margin-top:16px; }
+.vb-hero { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:14px; cursor:pointer; border:1px solid var(--border); transition:.2s; }
+.vb-hero:hover { transform:scale(1.01); box-shadow:0 4px 20px var(--shadow); }
+.vb-thumbs { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; margin-top:8px; }
+.vb-thumb { width:100%; aspect-ratio:1; object-fit:cover; border-radius:10px; cursor:pointer; border:1px solid var(--border); transition:.2s; position:relative; }
+.vb-thumb:hover { transform:scale(1.04); box-shadow:0 4px 16px var(--shadow); }
+.vb-add { width:100%; aspect-ratio:1; border:2px dashed var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:28px; color:var(--text3); cursor:pointer; transition:.2s; background:transparent; }
+.vb-add:hover { border-color:var(--terra); color:var(--terra); }
+.vb-add.hero { aspect-ratio:16/9; border-radius:14px; grid-column:1/-1; }
+.vb-remove { position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:rgba(0,0,0,.6); color:#fff; border:none; font-size:12px; cursor:pointer; display:none; align-items:center; justify-content:center; z-index:2; }
+.vb-thumb-wrap { position:relative; }
+.vb-thumb-wrap:hover .vb-remove { display:flex; }
+.vb-hero-wrap { position:relative; }
+.vb-hero-wrap:hover .vb-remove { display:flex; }
+.vb-empty { text-align:center; padding:40px 20px; color:var(--text3); font-size:14px; line-height:1.7; }
+
+/* ══════════════ BREATHING ══════════════ */
+.breath-panel { background:var(--card); border-radius:20px; padding:32px; max-width:480px; width:92%; box-shadow:0 24px 80px rgba(0,0,0,.18); position:relative; text-align:center; }
+.breath-circle-wrap { width:200px; height:200px; margin:24px auto; position:relative; display:flex; align-items:center; justify-content:center; }
+.breath-circle { width:80px; height:80px; border-radius:50%; background:var(--terra); opacity:.3; transition:all ease; position:absolute; }
+.breath-label { position:relative; z-index:2; font-size:16px; color:var(--text); font-weight:500; }
+.breath-exercises { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:20px; }
+.breath-ex { padding:8px 14px; border-radius:20px; border:1.5px solid var(--border); background:transparent; cursor:pointer; font-family:'DM Sans'; font-size:12px; color:var(--text); transition:.2s; }
+.breath-ex:hover, .breath-ex.active { background:var(--terra); color:#fff; border-color:var(--terra); }
+.breath-timer { font-size:14px; color:var(--text2); margin-top:12px; }
+.breath-start { margin-top:16px; }
+
+/* ══════════════ AMBIENT SOUNDS ══════════════ */
+.sounds-panel { background:var(--card); border-radius:20px; padding:32px; max-width:520px; width:92%; max-height:80vh; overflow-y:auto; box-shadow:0 24px 80px rgba(0,0,0,.18); position:relative; }
+.sounds-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+@media(max-width:480px){ .sounds-grid { grid-template-columns:repeat(2,1fr); } }
+.sound-card {
+  padding:14px 10px; border-radius:14px; border:1.5px solid var(--border); background:var(--bg);
+  cursor:pointer; text-align:center; transition:.25s; display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.sound-card:hover { border-color:var(--terra); }
+.sound-card.active { background:var(--terra-pale); border-color:var(--terra); }
+.sound-card .s-icon { font-size:28px; }
+.sound-card .s-name { font-size:12px; color:var(--text); }
+.sound-vol { width:100%; margin-top:6px; accent-color:var(--terra); height:4px; }
+.sounds-master { display:flex; align-items:center; gap:12px; margin-top:16px; padding:12px; background:var(--bg); border-radius:12px; }
+.sounds-master label { font-size:13px; color:var(--text2); white-space:nowrap; }
+.sounds-master input[type=range] { flex:1; accent-color:var(--terra); }
+.sounds-stop { margin-top:12px; }
 </style>
 </head>
 <body data-theme="lin">
@@ -445,6 +540,34 @@ body {
   <div class="pin-dots" id="pin-dots"></div>
   <div class="pin-pad" id="pin-pad"></div>
   <div class="pin-msg" id="pin-msg"></div>
+  <button class="reg-link" id="pin-forgot" onclick="showRecovery()" style="display:none;margin-top:8px;">PIN oublié ?</button>
+  <button class="reg-link" id="pin-register-link" onclick="showRegister()" style="display:none;margin-top:4px;">Créer un compte</button>
+</div>
+
+<!-- ═══ REGISTRATION ═══ -->
+<div id="register-screen">
+  <div class="pin-logo serif" style="margin-bottom:4px;">Inspirée</div>
+  <div class="pin-sub">Créez votre refuge</div>
+  <div class="reg-form" id="reg-form">
+    <input type="text" id="reg-pseudo" placeholder="Votre prénom ou pseudo" maxlength="30" />
+    <input type="email" id="reg-email" placeholder="Adresse email (pour récupération)" maxlength="100" />
+    <div class="reg-error" id="reg-error"></div>
+    <button class="reg-submit" onclick="submitRegistration()">Continuer → choisir un PIN</button>
+  </div>
+  <button class="reg-link" onclick="hideRegister()" style="margin-top:8px;">← Retour</button>
+</div>
+
+<!-- ═══ PIN RECOVERY ═══ -->
+<div id="recovery-screen">
+  <div class="pin-logo serif" style="margin-bottom:4px;">Inspirée</div>
+  <div class="pin-sub">Récupération du PIN</div>
+  <div class="reg-form" id="recovery-form">
+    <p style="font-size:14px;color:var(--text2);line-height:1.6;">Entrez l'email utilisé lors de votre inscription. Si un compte correspond, vous pourrez réinitialiser votre PIN.</p>
+    <input type="email" id="recovery-email" placeholder="Votre adresse email" />
+    <div class="reg-error" id="recovery-error"></div>
+    <button class="reg-submit" onclick="submitRecovery()">Vérifier</button>
+  </div>
+  <button class="reg-link" onclick="hideRecovery()" style="margin-top:8px;">← Retour</button>
 </div>
 
 <!-- ═══ WELCOME ═══ -->
@@ -465,7 +588,8 @@ body {
   <div class="home-actions fade-in-d4">
     <button class="home-action" onclick="openPromptGen()"><span class="icon">✨</span>Inspirer</button>
     <button class="home-action" onclick="goToApp()"><span class="icon">📖</span>Relire</button>
-    <button class="home-action" onclick="goToApp();setTimeout(()=>document.getElementById('search-input').focus(),400)"><span class="icon">🏷</span>Explorer</button>
+    <button class="home-action" onclick="openBreathing()"><span class="icon">🌬</span>Respirer</button>
+    <button class="home-action" onclick="openVisionBoard()"><span class="icon">🖼</span>Vision</button>
     <button class="home-action" onclick="openCalendar()"><span class="icon">🍃</span>Calendrier</button>
   </div>
   <div class="home-stats-bar fade-in-d5" id="home-stats"></div>
@@ -478,6 +602,9 @@ body {
     <div class="sidebar-header">
       <div class="logo serif">Inspirée</div>
       <div class="sidebar-icons">
+        <button class="icon-btn" onclick="openVisionBoard()" title="Vision Board">🖼</button>
+        <button class="icon-btn" onclick="openBreathing()" title="Respiration">🌬</button>
+        <button class="icon-btn" onclick="openSounds()" title="Sons">🎵</button>
         <button class="icon-btn" onclick="openCalendar()" title="Calendrier">🍃</button>
         <button class="icon-btn" onclick="openInsights()" title="Observations">🔮</button>
         <button class="icon-btn" onclick="openSettings()" title="Réglages">⚙</button>
@@ -518,13 +645,10 @@ body {
     <div class="composer">
       <div class="composer-box">
         <textarea id="note-input" placeholder="Dépose tes mots ici…" rows="1" oninput="autoGrow(this);toggleSend()"></textarea>
-        <div class="image-preview-row" id="img-preview-row"></div>
         <div class="composer-toolbar">
           <div class="composer-left">
-            <button class="composer-tool" onclick="document.getElementById('img-upload').click()" title="Ajouter une image">🖼</button>
             <button class="composer-tool" onclick="openPromptGen()" title="Inspiration">✨</button>
             <button class="composer-tool" onclick="openWheel()" title="Roue">🎡</button>
-            <input type="file" id="img-upload" accept="image/*" multiple style="display:none" onchange="handleImageUpload(event)">
           </div>
           <button class="send-btn" id="send-btn" onclick="addNote()" disabled>↑</button>
         </div>
@@ -608,11 +732,14 @@ body {
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
       <div class="sidebar-section-title" style="padding:8px 0 4px;">Thème</div>
       <div class="themes-grid" id="themes-grid"></div>
+      <div class="sidebar-section-title" style="padding:12px 0 4px;">Typographie des notes</div>
+      <div id="font-settings"></div>
       <div class="sidebar-section-title" style="padding:12px 0 4px;">Synchronisation</div>
       <div id="sync-status-settings" style="text-align:center;padding:8px;font-size:13px;color:var(--text2);background:var(--bg);border-radius:10px;"></div>
       <div class="sidebar-section-title" style="padding:12px 0 4px;">Données</div>
       <button class="btn" onclick="changePin()" style="width:100%;justify-content:center;">🔑 Changer le code PIN</button>
       <button class="btn" onclick="changeName()" style="width:100%;justify-content:center;">✏️ Changer le prénom</button>
+      <button class="btn" onclick="changeEmail()" style="width:100%;justify-content:center;">📧 Changer l'email</button>
       <button class="btn" onclick="exportAllData()" style="width:100%;justify-content:center;">💾 Exporter (JSON)</button>
       <button class="btn" onclick="document.getElementById('import-file').click()" style="width:100%;justify-content:center;">📂 Importer</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
@@ -645,6 +772,52 @@ body {
   </div>
 </div>
 
+<!-- ═══ VISION BOARD ═══ -->
+<div class="overlay" id="vb-overlay">
+  <div class="vb-panel">
+    <button class="close-x" onclick="closeOverlay('vb-overlay')">✕</button>
+    <h3 class="serif">🖼 Mon Vision Board</h3>
+    <p class="sub" style="color:var(--text2);font-size:13px;margin-bottom:8px;">Ton tableau d'inspiration visuelle — jusqu'à 12 images</p>
+    <div id="vb-content"></div>
+    <input type="file" id="vb-upload" accept="image/*" style="display:none" onchange="handleVBUpload(event)">
+  </div>
+</div>
+
+<!-- ═══ BREATHING ═══ -->
+<div class="overlay" id="breath-overlay">
+  <div class="breath-panel">
+    <button class="close-x" onclick="stopBreathing();closeOverlay('breath-overlay')">✕</button>
+    <h3 class="serif">🌬 Espace respiration</h3>
+    <p class="sub" style="color:var(--text2);font-size:13px;margin-bottom:16px;">Choisis un exercice et laisse-toi guider</p>
+    <div class="breath-exercises" id="breath-exercises"></div>
+    <div class="breath-circle-wrap">
+      <div class="breath-circle" id="breath-circle"></div>
+      <div class="breath-label" id="breath-label">Prête ?</div>
+    </div>
+    <div class="breath-timer" id="breath-timer"></div>
+    <div class="breath-start">
+      <button class="btn primary" id="breath-start-btn" onclick="toggleBreathing()">▶ Commencer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AMBIENT SOUNDS ═══ -->
+<div class="overlay" id="sounds-overlay">
+  <div class="sounds-panel">
+    <button class="close-x" onclick="closeOverlay('sounds-overlay')">✕</button>
+    <h3 class="serif">🎵 Sons d'ambiance</h3>
+    <p class="sub" style="color:var(--text2);font-size:13px;margin-bottom:8px;">Combine les sons et ajuste le volume</p>
+    <div class="sounds-grid" id="sounds-grid"></div>
+    <div class="sounds-master">
+      <label>🔊 Volume</label>
+      <input type="range" min="0" max="100" value="50" id="master-vol" oninput="setMasterVol(this.value)">
+    </div>
+    <div class="sounds-stop" style="text-align:center;">
+      <button class="btn" onclick="stopAllSounds()">⏹ Tout arrêter</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ LIGHTBOX ═══ -->
 <div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
   <img id="lightbox-img" src="" />
@@ -656,9 +829,11 @@ body {
 // ═══════════════════════════════════════
 const SK = 'inspiree_v2';
 let D = {
-  pin: null, name: 'Valérie', theme: 'lin',
+  pin: null, name: '', email: '', pseudo: '', theme: 'lin',
+  noteFont: 'cormorant', noteSize: 16, noteSpacing: 'moyen',
   notes: [], tags: [], collections: [],
   moods: {}, // date-string → mood
+  visionBoard: [], // array of {id, src (base64), isHero: bool}
 };
 
 const DEFAULT_TAGS = [
@@ -686,16 +861,22 @@ function load() {
   if (!D.notes) D.notes = [];
   if (!D.collections) D.collections = [];
   if (!D.moods) D.moods = {};
-  if (!D.name) D.name = 'Valérie';
+  if (!D.name) D.name = D.pseudo || '';
+  if (!D.email) D.email = '';
+  if (!D.pseudo) D.pseudo = D.name || '';
   if (!D.theme) D.theme = 'lin';
+  if (!D.noteFont) D.noteFont = 'cormorant';
+  if (!D.noteSize) D.noteSize = 16;
+  if (!D.noteSpacing) D.noteSpacing = 'moyen';
+  if (!D.visionBoard) D.visionBoard = [];
   document.body.setAttribute('data-theme', D.theme);
+  applyNoteStyle();
 }
 function save() { localStorage.setItem(SK, JSON.stringify(D)); }
 
 let activeTag = null;
 let searchQuery = '';
 let calMonth, calYear;
-let pendingImages = []; // base64 strings for new note
 let currentPromptCat = null;
 let currentPrompt = '';
 let wheelPrompt = '';
@@ -755,8 +936,20 @@ function initPin() {
   pad.innerHTML+=`<button class="pin-btn fn" onclick="pinDel()">⌫</button>`;
   pad.innerHTML+=`<button class="pin-btn" onclick="pinIn('0')">0</button>`;
   pad.innerHTML+=`<button class="pin-btn fn" id="pin-ok" onclick="pinOk()" style="display:none">OK</button>`;
-  if(!D.pin){pinStep='create';document.getElementById('pin-title').textContent='Créez votre code PIN (4-6 chiffres)';document.getElementById('pin-msg').textContent='Ce code protégera votre refuge.';}
-  else{pinStep='check';document.getElementById('pin-title').textContent='Entrez votre code PIN';document.getElementById('pin-msg').textContent='';}
+  if(!D.pin){
+    // No PIN yet → show registration first if no pseudo/email
+    if(!D.pseudo && !D.email){
+      showRegister();
+      return;
+    }
+    pinStep='create';document.getElementById('pin-title').textContent='Créez votre code PIN (4-6 chiffres)';document.getElementById('pin-msg').textContent='Ce code protégera votre refuge.';
+    document.getElementById('pin-forgot').style.display='none';
+    document.getElementById('pin-register-link').style.display='none';
+  } else {
+    pinStep='check';document.getElementById('pin-title').textContent='Entrez votre code PIN';document.getElementById('pin-msg').textContent='';
+    document.getElementById('pin-forgot').style.display=D.email?'inline-block':'none';
+    document.getElementById('pin-register-link').style.display='none';
+  }
   pinBuf=''; renderDots();
 }
 
@@ -941,7 +1134,7 @@ function renderNotes(){
 function addNote(){
   const input=document.getElementById('note-input');
   const text=input.value.trim();
-  if(!text&&!pendingImages.length)return;
+  if(!text)return;
   const foundTags=[];
   const re=/#([\wÀ-ɏé]+)/g; let m;
   while((m=re.exec(text))!==null){
@@ -952,11 +1145,10 @@ function addNote(){
   const note={
     id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),
     text, tags:foundTags.length?[...new Set(foundTags)]:(activeTag?[activeTag]:[]),
-    ts:Date.now(), editedTs:null,
-    images:[...pendingImages]
+    ts:Date.now(), editedTs:null
   };
   D.notes.push(note); save();
-  input.value=''; pendingImages=[]; document.getElementById('img-preview-row').innerHTML='';
+  input.value='';
   autoGrow(input); toggleSend();
   renderTags(); renderNotes();
 }
@@ -1710,6 +1902,9 @@ const THEMES=[
   {id:'nuit',name:'Nuit',emoji:'🌙',swatch:'#1A1B2E'},
   {id:'automne',name:'Automne',emoji:'🍂',swatch:'#B85C38'},
   {id:'fleur',name:'Fleur de coton',emoji:'🌸',swatch:'#C77D8E'},
+  {id:'marron',name:'Marron',emoji:'🤎',swatch:'#7B5B3A'},
+  {id:'bleu',name:'Bleu',emoji:'💙',swatch:'#4A7FB5'},
+  {id:'gris',name:'Gris',emoji:'🩶',swatch:'#7A7A7A'},
 ];
 
 function renderThemes(){
@@ -1720,15 +1915,61 @@ function renderThemes(){
 function setTheme(id){D.theme=id;document.body.setAttribute('data-theme',id);save();renderThemes();}
 
 // ═══════════════════════════════════════
+// NOTE STYLE (font, size, spacing)
+// ═══════════════════════════════════════
+const NOTE_FONTS={
+  cormorant:{name:'Cormorant Garamond',family:"'Cormorant Garamond', Georgia, serif",style:'Serif élégante'},
+  dmsans:{name:'DM Sans',family:"'DM Sans', -apple-system, sans-serif",style:'Sans-serif moderne'},
+  lora:{name:'Lora',family:"'Lora', Georgia, serif",style:'Serif classique'},
+};
+const NOTE_SPACINGS={fin:{label:'Fin',lh:1.4},moyen:{label:'Moyen',lh:1.7},large:{label:'Large',lh:2.1}};
+
+function applyNoteStyle(){
+  const f=NOTE_FONTS[D.noteFont]||NOTE_FONTS.cormorant;
+  const sp=NOTE_SPACINGS[D.noteSpacing]||NOTE_SPACINGS.moyen;
+  const css=`--note-font:${f.family};--note-size:${D.noteSize}px;--note-lh:${sp.lh};`;
+  document.documentElement.style.cssText+=css;
+}
+
+function setNoteFont(id){D.noteFont=id;save();applyNoteStyle();renderNotes();renderFontSettings();}
+function setNoteSize(val){D.noteSize=parseInt(val);save();applyNoteStyle();renderNotes();document.getElementById('size-val').textContent=val+'px';}
+function setNoteSpacing(id){D.noteSpacing=id;save();applyNoteStyle();renderNotes();renderFontSettings();}
+
+function renderFontSettings(){
+  document.getElementById('font-settings').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);padding:4px 0;">Police</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        ${Object.entries(NOTE_FONTS).map(([id,f])=>`<button class="breath-ex ${D.noteFont===id?'active':''}" onclick="setNoteFont('${id}')" style="flex:1;min-width:80px;"><span style="font-family:${f.family};font-size:15px;">${f.name}</span><br><span style="font-size:10px;opacity:.7">${f.style}</span></button>`).join('')}
+      </div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);padding:8px 0 4px;">Taille <span id="size-val" style="color:var(--terra)">${D.noteSize}px</span></div>
+      <input type="range" min="13" max="24" value="${D.noteSize}" oninput="setNoteSize(this.value)" style="width:100%;accent-color:var(--terra);">
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);"><span>Petit</span><span>Grand</span></div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);padding:8px 0 4px;">Interligne</div>
+      <div style="display:flex;gap:8px;">
+        ${Object.entries(NOTE_SPACINGS).map(([id,s])=>`<button class="breath-ex ${D.noteSpacing===id?'active':''}" onclick="setNoteSpacing('${id}')" style="flex:1;">${s.label}<br><span style="font-size:10px;opacity:.7">${s.lh}</span></button>`).join('')}
+      </div>
+      <div style="margin-top:8px;padding:16px;background:var(--bg);border-radius:10px;font-family:var(--note-font);font-size:var(--note-size);line-height:var(--note-lh);color:var(--text);">Aperçu du texte dans tes notes. Chaque mot déposé ici est un pas vers toi-même.</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════
 // SETTINGS
 // ═══════════════════════════════════════
-function openSettings(){renderThemes();document.getElementById('settings-overlay').classList.add('open');}
+function openSettings(){renderThemes();renderFontSettings();document.getElementById('settings-overlay').classList.add('open');}
 function changePin(){closeOverlay('settings-overlay');D.pin=null;save();document.getElementById('pin-screen').classList.remove('hidden');document.getElementById('app').classList.remove('active');document.getElementById('home-screen').classList.remove('active');initPin();}
 function changeName(){
   document.getElementById('modal-title').textContent='Votre prénom';
   document.getElementById('modal-input').value=D.name;document.getElementById('modal-input').placeholder='Prénom…';
   document.getElementById('modal-extra').innerHTML='';
-  document.getElementById('modal-confirm').onclick=()=>{const v=document.getElementById('modal-input').value.trim();if(v){D.name=v;save();}closeModal();};
+  document.getElementById('modal-confirm').onclick=()=>{const v=document.getElementById('modal-input').value.trim();if(v){D.name=v;D.pseudo=v;save();}closeModal();};
+  closeOverlay('settings-overlay');openModal();
+}
+function changeEmail(){
+  document.getElementById('modal-title').textContent='Votre email';
+  document.getElementById('modal-input').value=D.email||'';document.getElementById('modal-input').placeholder='email@example.com';
+  document.getElementById('modal-extra').innerHTML='<p style="font-size:12px;color:var(--text3);margin-bottom:8px;">Utilisé pour la récupération du PIN</p>';
+  document.getElementById('modal-confirm').onclick=()=>{const v=document.getElementById('modal-input').value.trim();if(v&&v.includes('@')){D.email=v;save();}closeModal();};
   closeOverlay('settings-overlay');openModal();
 }
 function exportAllData(){const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`inspiree_${new Date().toISOString().slice(0,10)}.json`;a.click();}
@@ -1742,7 +1983,7 @@ function dateStr(ts){const d=new Date(ts);return d.getFullYear()+'-'+(d.getMonth
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function renderText(s){return esc(s).replace(/#([\wÀ-ɏé]+)/g,'<span style="color:var(--terra);font-weight:500">#$1</span>');}
 function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
-function toggleSend(){document.getElementById('send-btn').disabled=!document.getElementById('note-input').value.trim()&&!pendingImages.length;}
+function toggleSend(){document.getElementById('send-btn').disabled=!document.getElementById('note-input').value.trim();}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sb-overlay').classList.toggle('open');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('open');}
 document.getElementById('sb-overlay').addEventListener('click',closeSidebar);
@@ -1810,7 +2051,7 @@ async function syncUp(){
 
   try{
     const pinHash=await hashPin(D.pin);
-    const payload={user_pin:pinHash,data:D};
+    const payload={user_pin:pinHash,data:D,email:D.email||null,pseudo:D.pseudo||null};
 
     if(supaRowId){
       // Update existing row
@@ -1986,6 +2227,443 @@ function installPWA(){
 function dismissInstall(){
   document.getElementById('install-banner').classList.remove('show');
   localStorage.setItem('inspiree_install_dismissed','1');
+}
+
+// ═══════════════════════════════════════
+// REGISTRATION & RECOVERY
+// ═══════════════════════════════════════
+function showRegister(){
+  document.getElementById('pin-screen').classList.add('hidden');
+  document.getElementById('register-screen').classList.add('active');
+  document.getElementById('reg-pseudo').value=D.pseudo||'';
+  document.getElementById('reg-email').value=D.email||'';
+  document.getElementById('reg-error').textContent='';
+}
+function hideRegister(){
+  document.getElementById('register-screen').classList.remove('active');
+  document.getElementById('pin-screen').classList.remove('hidden');
+  // If they have a PIN already, show check
+  if(D.pin){pinStep='check';document.getElementById('pin-title').textContent='Entrez votre code PIN';renderDots();}
+  else{document.getElementById('pin-register-link').style.display='inline-block';}
+}
+function submitRegistration(){
+  const pseudo=document.getElementById('reg-pseudo').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  if(!pseudo){document.getElementById('reg-error').textContent='Entrez un prénom ou pseudo.';return;}
+  if(!email||!email.includes('@')){document.getElementById('reg-error').textContent='Entrez une adresse email valide.';return;}
+  D.pseudo=pseudo;D.name=pseudo;D.email=email;save();
+  document.getElementById('register-screen').classList.remove('active');
+  document.getElementById('pin-screen').classList.remove('hidden');
+  pinStep='create';pinBuf='';pinFirst='';
+  document.getElementById('pin-title').textContent='Créez votre code PIN (4-6 chiffres)';
+  document.getElementById('pin-msg').textContent=`Bienvenue ${pseudo} ! Ce code protégera votre refuge.`;
+  document.getElementById('pin-forgot').style.display='none';
+  document.getElementById('pin-register-link').style.display='none';
+  renderDots();
+}
+
+function showRecovery(){
+  document.getElementById('pin-screen').classList.add('hidden');
+  document.getElementById('recovery-screen').classList.add('active');
+  document.getElementById('recovery-email').value='';
+  document.getElementById('recovery-error').textContent='';
+}
+function hideRecovery(){
+  document.getElementById('recovery-screen').classList.remove('active');
+  document.getElementById('pin-screen').classList.remove('hidden');
+}
+async function submitRecovery(){
+  const email=document.getElementById('recovery-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('recovery-error').textContent='Entrez une adresse email valide.';return;}
+  // Check local first
+  if(D.email&&D.email.toLowerCase()===email.toLowerCase()){
+    // Match! Allow PIN reset
+    document.getElementById('recovery-screen').classList.remove('active');
+    document.getElementById('pin-screen').classList.remove('hidden');
+    D.pin=null;save();
+    pinStep='create';pinBuf='';pinFirst='';
+    document.getElementById('pin-title').textContent='Créez un nouveau code PIN';
+    document.getElementById('pin-msg').textContent='Email vérifié ✓ — choisissez un nouveau PIN.';
+    document.getElementById('pin-forgot').style.display='none';
+    renderDots();
+    return;
+  }
+  // Check Supabase for matching email
+  try{
+    const rows=await supaFetch(`inspiree_data?email=eq.${encodeURIComponent(email)}&select=id,data`);
+    if(rows&&rows.length>0){
+      const remote=rows[0].data;
+      if(remote){
+        D={...remote,pin:null,email:email};
+        D.name=D.pseudo||D.name||'';
+        save();
+        document.getElementById('recovery-screen').classList.remove('active');
+        document.getElementById('pin-screen').classList.remove('hidden');
+        pinStep='create';pinBuf='';pinFirst='';
+        document.getElementById('pin-title').textContent='Créez un nouveau code PIN';
+        document.getElementById('pin-msg').textContent='Compte retrouvé ✓ — choisissez un nouveau PIN.';
+        document.getElementById('pin-forgot').style.display='none';
+        renderDots();
+        return;
+      }
+    }
+    document.getElementById('recovery-error').textContent='Aucun compte trouvé avec cet email.';
+  }catch(e){
+    document.getElementById('recovery-error').textContent='Erreur réseau. Réessayez.';
+  }
+}
+
+// ═══════════════════════════════════════
+// VISION BOARD
+// ═══════════════════════════════════════
+let vbUploadIsHero=false;
+
+function openVisionBoard(){
+  renderVisionBoard();
+  document.getElementById('vb-overlay').classList.add('open');
+}
+
+function renderVisionBoard(){
+  const el=document.getElementById('vb-content');
+  const vb=D.visionBoard||[];
+  const hero=vb.find(v=>v.isHero);
+  const thumbs=vb.filter(v=>!v.isHero);
+  let html='';
+
+  // Hero section
+  if(hero){
+    html+=`<div class="vb-hero-wrap"><img class="vb-hero" src="${hero.src}" onclick="openLightbox('${hero.src.replace(/'/g,"\\'")}')" /><button class="vb-remove" onclick="removeVBImage('${hero.id}')">✕</button></div>`;
+  } else if(vb.length<12){
+    html+=`<button class="vb-add hero" onclick="vbUploadHero()">＋ Image principale</button>`;
+  }
+
+  // Thumbs grid
+  html+='<div class="vb-thumbs">';
+  thumbs.forEach(v=>{
+    html+=`<div class="vb-thumb-wrap"><img class="vb-thumb" src="${v.src}" onclick="openLightbox('${v.src.replace(/'/g,"\\'")}')" /><button class="vb-remove" onclick="removeVBImage('${v.id}')">✕</button></div>`;
+  });
+  if(vb.length<12){
+    html+=`<button class="vb-add" onclick="vbUploadThumb()">＋</button>`;
+  }
+  html+='</div>';
+
+  if(!vb.length){
+    html=`<div class="vb-empty"><div style="font-size:40px;margin-bottom:12px;">🖼</div>Ton vision board est vide.<br>Ajoute jusqu'à 12 images d'inspiration.<br><br><button class="btn primary" onclick="vbUploadHero()">＋ Ajouter une image</button></div>`;
+  }
+  html+=`<div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text3);">${vb.length}/12 images</div>`;
+  el.innerHTML=html;
+}
+
+function vbUploadHero(){vbUploadIsHero=true;document.getElementById('vb-upload').click();}
+function vbUploadThumb(){vbUploadIsHero=false;document.getElementById('vb-upload').click();}
+
+function handleVBUpload(e){
+  const file=e.target.files[0];if(!file||!file.type.startsWith('image/'))return;
+  if(D.visionBoard.length>=12){alert('Maximum 12 images atteint.');e.target.value='';return;}
+
+  // Compress image
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const maxW=vbUploadIsHero?1200:600;
+      const maxH=vbUploadIsHero?800:600;
+      let w=img.width,h=img.height;
+      if(w>maxW){h=h*(maxW/w);w=maxW;}
+      if(h>maxH){w=w*(maxH/h);h=maxH;}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const compressed=canvas.toDataURL('image/jpeg',0.7);
+      const id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+
+      // If adding hero and one exists, demote old hero
+      if(vbUploadIsHero){
+        const oldHero=D.visionBoard.find(v=>v.isHero);
+        if(oldHero)oldHero.isHero=false;
+      }
+      D.visionBoard.push({id,src:compressed,isHero:vbUploadIsHero});
+      save();renderVisionBoard();
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+
+function removeVBImage(id){
+  D.visionBoard=D.visionBoard.filter(v=>v.id!==id);
+  // If no hero, promote first thumb
+  if(!D.visionBoard.find(v=>v.isHero)&&D.visionBoard.length>0){
+    D.visionBoard[0].isHero=true;
+  }
+  save();renderVisionBoard();
+}
+
+// ═══════════════════════════════════════
+// BREATHING EXERCISES
+// ═══════════════════════════════════════
+const BREATH_EXERCISES=[
+  {id:'coherence',name:'Cohérence cardiaque',steps:[{l:'Inspire',d:5},{l:'Expire',d:5}],desc:'5-5'},
+  {id:'478',name:'4-7-8 Relaxante',steps:[{l:'Inspire',d:4},{l:'Retiens',d:7},{l:'Expire',d:8}],desc:'4-7-8'},
+  {id:'box',name:'Respiration carrée',steps:[{l:'Inspire',d:4},{l:'Retiens',d:4},{l:'Expire',d:4},{l:'Pause',d:4}],desc:'4-4-4-4'},
+  {id:'calm',name:'Apaisante',steps:[{l:'Inspire',d:4},{l:'Expire',d:6}],desc:'4-6'},
+  {id:'energy',name:'Énergisante',steps:[{l:'Inspire',d:2},{l:'Expire',d:2}],desc:'2-2 rapide'},
+  {id:'ujjayi',name:'Ujjayi',steps:[{l:'Inspire',d:4},{l:'Expire',d:4}],desc:'4-4 océan'},
+  {id:'nadi',name:'Alternée',steps:[{l:'Inspire G',d:4},{l:'Retiens',d:4},{l:'Expire D',d:4},{l:'Inspire D',d:4},{l:'Retiens',d:4},{l:'Expire G',d:4}],desc:'Nadi Shodhana'},
+  {id:'555',name:'Triangulaire',steps:[{l:'Inspire',d:5},{l:'Retiens',d:5},{l:'Expire',d:5}],desc:'5-5-5'},
+  {id:'slow',name:'Lente profonde',steps:[{l:'Inspire',d:6},{l:'Expire',d:6}],desc:'6-6'},
+  {id:'sleep',name:'Sommeil',steps:[{l:'Inspire',d:4},{l:'Retiens',d:7},{l:'Expire',d:8},{l:'Pause',d:4}],desc:'4-7-8-4'},
+];
+
+let breathActive=false,breathInterval=null,breathExIdx=0,breathCycles=0;
+
+function openBreathing(){
+  initBreathExercises();
+  document.getElementById('breath-overlay').classList.add('open');
+}
+
+function initBreathExercises(){
+  document.getElementById('breath-exercises').innerHTML=BREATH_EXERCISES.map((ex,i)=>
+    `<button class="breath-ex ${i===breathExIdx?'active':''}" onclick="selectBreathEx(${i})">${ex.name}<br><span style="font-size:10px;color:inherit;opacity:.7">${ex.desc}</span></button>`
+  ).join('');
+}
+
+function selectBreathEx(i){
+  breathExIdx=i;stopBreathing();initBreathExercises();
+  document.getElementById('breath-label').textContent='Prête ?';
+  document.getElementById('breath-timer').textContent='';
+  document.getElementById('breath-circle').style.width='80px';
+  document.getElementById('breath-circle').style.height='80px';
+  document.getElementById('breath-circle').style.opacity='.3';
+}
+
+function toggleBreathing(){
+  if(breathActive)stopBreathing();else startBreathing();
+}
+
+function startBreathing(){
+  breathActive=true;breathCycles=0;
+  document.getElementById('breath-start-btn').innerHTML='⏸ Pause';
+  runBreathCycle();
+}
+
+function stopBreathing(){
+  breathActive=false;
+  if(breathInterval)clearTimeout(breathInterval);breathInterval=null;
+  document.getElementById('breath-start-btn').innerHTML='▶ Commencer';
+  document.getElementById('breath-label').textContent='Prête ?';
+  document.getElementById('breath-circle').style.transition='all 0.5s ease';
+  document.getElementById('breath-circle').style.width='80px';
+  document.getElementById('breath-circle').style.height='80px';
+  document.getElementById('breath-circle').style.opacity='.3';
+}
+
+function runBreathCycle(){
+  if(!breathActive)return;
+  const ex=BREATH_EXERCISES[breathExIdx];
+  let stepIdx=0;
+
+  function doStep(){
+    if(!breathActive)return;
+    if(stepIdx>=ex.steps.length){breathCycles++;stepIdx=0;}
+    const step=ex.steps[stepIdx];
+    const circle=document.getElementById('breath-circle');
+    const label=document.getElementById('breath-label');
+    const timer=document.getElementById('breath-timer');
+
+    label.textContent=step.l;
+    timer.textContent=`Cycle ${breathCycles+1}`;
+    circle.style.transition=`all ${step.d}s ease`;
+
+    if(step.l.startsWith('Inspire')){
+      circle.style.width='180px';circle.style.height='180px';circle.style.opacity='.8';
+    } else if(step.l.startsWith('Expire')){
+      circle.style.width='60px';circle.style.height='60px';circle.style.opacity='.25';
+    } else {
+      // Hold/Pause — keep current size, gentle pulse
+      circle.style.opacity=circle.style.opacity==='.8'?'.7':'.35';
+    }
+
+    stepIdx++;
+    breathInterval=setTimeout(doStep,step.d*1000);
+  }
+  doStep();
+}
+
+// ═══════════════════════════════════════
+// AMBIENT SOUNDS (Web Audio API)
+// ═══════════════════════════════════════
+let audioCtx=null;
+let masterGain=null;
+const activeSounds={};
+
+const AMBIENT_SOUNDS=[
+  {id:'rain',name:'Pluie douce',icon:'🌧',type:'noise',color:'pink'},
+  {id:'waves',name:'Vagues',icon:'🌊',type:'noise',color:'brown',mod:true},
+  {id:'wind',name:'Vent doux',icon:'🌬',type:'noise',color:'brown'},
+  {id:'forest',name:'Forêt',icon:'🌿',type:'noise',color:'green'},
+  {id:'fire',name:'Feu',icon:'🔥',type:'noise',color:'crackle'},
+  {id:'fountain',name:'Fontaine',icon:'💧',type:'noise',color:'white',filter:true},
+  {id:'bowl',name:'Bol tibétain',icon:'🔔',type:'tone',freq:136.1,harmonics:true},
+  {id:'chime',name:'Carillon',icon:'🎐',type:'chime'},
+  {id:'hz432',name:'432 Hz Détente',icon:'✨',type:'tone',freq:432},
+  {id:'hz528',name:'528 Hz Amour',icon:'💚',type:'tone',freq:528},
+  {id:'hz639',name:'639 Hz Connexion',icon:'💜',type:'tone',freq:639},
+  {id:'hz852',name:'852 Hz Intuition',icon:'🤍',type:'tone',freq:852},
+];
+
+function initAudioCtx(){
+  if(!audioCtx){
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=audioCtx.createGain();
+    masterGain.gain.value=0.5;
+    masterGain.connect(audioCtx.destination);
+  }
+  if(audioCtx.state==='suspended')audioCtx.resume();
+}
+
+function openSounds(){
+  renderSoundsGrid();
+  document.getElementById('sounds-overlay').classList.add('open');
+}
+
+function renderSoundsGrid(){
+  document.getElementById('sounds-grid').innerHTML=AMBIENT_SOUNDS.map(s=>{
+    const isActive=!!activeSounds[s.id];
+    const vol=activeSounds[s.id]?Math.round(activeSounds[s.id].vol*100):50;
+    return `<div class="sound-card ${isActive?'active':''}" id="sc-${s.id}">
+      <div class="s-icon" onclick="toggleSound('${s.id}')">${s.icon}</div>
+      <div class="s-name">${s.name}</div>
+      <input type="range" class="sound-vol" min="0" max="100" value="${vol}" oninput="setSoundVol('${s.id}',this.value)" ${isActive?'':'disabled'}>
+    </div>`;
+  }).join('');
+}
+
+function toggleSound(id){
+  initAudioCtx();
+  if(activeSounds[id]){
+    stopSound(id);
+  } else {
+    startSound(id);
+  }
+  renderSoundsGrid();
+}
+
+function startSound(id){
+  const s=AMBIENT_SOUNDS.find(x=>x.id===id);if(!s)return;
+  const gain=audioCtx.createGain();
+  gain.gain.value=0.5;
+  gain.connect(masterGain);
+  let nodes=[];
+
+  if(s.type==='noise'){
+    // Generate noise buffer
+    const bufSize=audioCtx.sampleRate*2;
+    const buf=audioCtx.createBuffer(1,bufSize,audioCtx.sampleRate);
+    const data=buf.getChannelData(0);
+    if(s.color==='pink'||s.color==='green'){
+      let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+      for(let i=0;i<bufSize;i++){
+        const w=Math.random()*2-1;
+        b0=0.99886*b0+w*0.0555179;b1=0.99332*b1+w*0.0750759;
+        b2=0.969*b2+w*0.153852;b3=0.8665*b3+w*0.3104856;
+        b4=0.55*b4+w*0.5329522;b5=-0.7616*b5-w*0.016898;
+        data[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11;b6=w*0.115926;
+      }
+    } else if(s.color==='brown'){
+      let last=0;
+      for(let i=0;i<bufSize;i++){last=(last+(Math.random()*2-1)*0.02)/1.02;data[i]=last*3.5;}
+    } else if(s.color==='crackle'){
+      for(let i=0;i<bufSize;i++){
+        data[i]=Math.random()>0.997?(Math.random()*2-1)*0.8:Math.random()>0.99?(Math.random()*2-1)*0.3:(Math.random()*2-1)*0.02;
+      }
+    } else {
+      for(let i=0;i<bufSize;i++) data[i]=(Math.random()*2-1);
+    }
+    const src=audioCtx.createBufferSource();
+    src.buffer=buf;src.loop=true;
+    // Add filter for some sounds
+    if(s.filter||s.color==='green'){
+      const filt=audioCtx.createBiquadFilter();
+      filt.type='lowpass';filt.frequency.value=s.color==='green'?800:1200;
+      src.connect(filt);filt.connect(gain);nodes.push(filt);
+    } else {
+      const filt=audioCtx.createBiquadFilter();
+      filt.type='lowpass';filt.frequency.value=s.color==='crackle'?3000:2000;
+      src.connect(filt);filt.connect(gain);nodes.push(filt);
+    }
+    // Modulation for waves
+    if(s.mod){
+      const lfo=audioCtx.createOscillator();
+      const lfoGain=audioCtx.createGain();
+      lfo.frequency.value=0.1;lfoGain.gain.value=0.3;
+      lfo.connect(lfoGain);lfoGain.connect(gain.gain);
+      lfo.start();nodes.push(lfo,lfoGain);
+    }
+    src.start();nodes.push(src);
+  } else if(s.type==='tone'){
+    const osc=audioCtx.createOscillator();
+    osc.type='sine';osc.frequency.value=s.freq;
+    osc.connect(gain);osc.start();nodes.push(osc);
+    if(s.harmonics){
+      [2,3,4].forEach((h,i)=>{
+        const o2=audioCtx.createOscillator();
+        const g2=audioCtx.createGain();
+        g2.gain.value=0.15/(i+1);
+        o2.type='sine';o2.frequency.value=s.freq*h;
+        o2.connect(g2);g2.connect(gain);o2.start();
+        nodes.push(o2,g2);
+      });
+    }
+    gain.gain.value=0.15; // Tones quieter by default
+  } else if(s.type==='chime'){
+    // Repeating chime pattern
+    const playChime=()=>{
+      if(!activeSounds[id])return;
+      const freq=400+Math.random()*600;
+      const osc=audioCtx.createOscillator();
+      const env=audioCtx.createGain();
+      osc.type='sine';osc.frequency.value=freq;
+      env.gain.setValueAtTime(0.3,audioCtx.currentTime);
+      env.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+2);
+      osc.connect(env);env.connect(gain);osc.start();
+      osc.stop(audioCtx.currentTime+2);
+      activeSounds[id].chimeTimer=setTimeout(playChime,2000+Math.random()*4000);
+    };
+    playChime();
+    gain.gain.value=0.4;
+  }
+
+  activeSounds[id]={gain,nodes,vol:gain.gain.value};
+}
+
+function stopSound(id){
+  const s=activeSounds[id];if(!s)return;
+  s.gain.gain.setValueAtTime(s.gain.gain.value,audioCtx.currentTime);
+  s.gain.gain.linearRampToValueAtTime(0,audioCtx.currentTime+0.3);
+  setTimeout(()=>{
+    s.nodes.forEach(n=>{try{n.stop();}catch(e){}try{n.disconnect();}catch(e){}});
+    s.gain.disconnect();
+  },400);
+  if(s.chimeTimer)clearTimeout(s.chimeTimer);
+  delete activeSounds[id];
+}
+
+function setSoundVol(id,val){
+  const s=activeSounds[id];if(!s)return;
+  s.vol=val/100;
+  s.gain.gain.setValueAtTime(val/100,audioCtx.currentTime);
+}
+
+function setMasterVol(val){
+  initAudioCtx();
+  masterGain.gain.setValueAtTime(val/100,audioCtx.currentTime);
+}
+
+function stopAllSounds(){
+  Object.keys(activeSounds).forEach(id=>stopSound(id));
+  renderSoundsGrid();
 }
 
 // ═══════════════════════════════════════
